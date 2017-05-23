@@ -1,10 +1,10 @@
-package avdb
+package templates
 
 import (
-	"aviation"
 	"database/sql"
 	"errors"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/lingmiaotech/aviation"
 	"github.com/pressly/goose"
 	"log"
 	"os"
