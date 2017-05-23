@@ -5,4 +5,7 @@ path = aviation
 gopkg.in/gin-gonic/gin.v1 = tag:v1.1.4
 gopkg.in/alexcesaro/statsd.v2 = tag:v2.0.0
 github.com/spf13/viper = commit:0967fc9aceab2ce9da34061253ac10fb99bba5b2
+github.com/go-sql-driver/mysql = tag:v1.3
+github.com/pressly/goose = tag:v1.0
+github.com/jinzhu/gorm = tag:v1.0
 

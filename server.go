@@ -27,6 +27,11 @@ func (s *Server) Start() (err error) {
 		return
 	}
 
+	err = InitDatabase()
+	if err != nil {
+		return
+	}
+
 	err = s.InitRoutes()
 	if err != nil {
 		return
