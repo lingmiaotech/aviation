@@ -11,6 +11,14 @@ type Server struct {
 	Routes []Route
 }
 
+func New() Server {
+	return Server{
+		app:    gin.Default(),
+		Port:   8080,
+		Routes: []Route{},
+	}
+}
+
 func (s *Server) SetPort(p int) {
 	s.Port = p
 }
