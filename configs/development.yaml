@@ -1,0 +1,11 @@
+app_name: aviation
+env: development
+
+sentry:
+  enabled: False
+
+kafka:
+  - 127.0.0.1:9092
+
+statsd:
+  enabled: False

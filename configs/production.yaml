@@ -1,0 +1,16 @@
+app_name: aviation
+env: production
+
+sentry:
+  enabled: True
+  dsn: http://abc:xyz@example.com/1
+
+kafka:
+  - 10.28.32.158:9092
+  - 10.171.174.67:9092
+  - 10.47.116.107:9092
+
+statsd:
+  enabled: True
+  host: 10.47.124.81
+  port: 8125
