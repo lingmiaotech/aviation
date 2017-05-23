@@ -11,8 +11,8 @@ type Server struct {
 	Routes []Route
 }
 
-func New() Server {
-	return Server{
+func New() *Server {
+	return &Server{
 		app:    gin.Default(),
 		Port:   8080,
 		Routes: []Route{},
