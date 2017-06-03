@@ -1,4 +1,4 @@
-package aviation
+package tonic
 
 import (
 	"fmt"
@@ -34,7 +34,7 @@ func (s *Server) InitRoutes() error {
 			s.app.DELETE(route.pattern, route.handler)
 		default:
 			lowerMethod := strings.ToLower(route.method)
-			return fmt.Errorf("aviation_error.routes.invalid_method.%s", lowerMethod)
+			return fmt.Errorf("tonic_error.routes.invalid_method.%s", lowerMethod)
 
 		}
 	}

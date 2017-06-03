@@ -1,4 +1,4 @@
-app_name: aviation
+app_name: tonic
 env: production
 
 sentry:

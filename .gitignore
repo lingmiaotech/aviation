@@ -24,4 +24,5 @@ msc/
 
 env/
 
-result.wav
+*.lock
+vendor

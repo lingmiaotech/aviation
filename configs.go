@@ -1,4 +1,4 @@
-package aviation
+package tonic
 
 import (
 	"bytes"
@@ -21,7 +21,7 @@ func InitConfigs() error {
 
 	conf, err := ioutil.ReadFile(appEnv)
 	if err != nil {
-		return errors.New("aviation_error.configs.missing_configs_file")
+		return errors.New("tonic_error.configs.missing_configs_file")
 	}
 
 	err = viper.ReadConfig(bytes.NewBuffer(conf))

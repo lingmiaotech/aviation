@@ -1,4 +1,4 @@
-package aviation
+package tonic
 
 import (
 	"errors"
@@ -17,12 +17,12 @@ func InitDatabase() (err error) {
 
 	driver := Configs.GetString("database.driver")
 	if driver == "" {
-		return errors.New("aviation_error.database.empty_dbstring_config")
+		return errors.New("tonic_error.database.empty_dbstring_config")
 	}
 
 	dbstring := Configs.GetString("database.dbstring")
 	if dbstring == "" {
-		return errors.New("aviation_error.database.empty_dbstring_config")
+		return errors.New("tonic_error.database.empty_dbstring_config")
 	}
 
 	Engine, err = gorm.Open(driver, dbstring)

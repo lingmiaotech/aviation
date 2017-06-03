@@ -1,4 +1,4 @@
-package templates
+package tonicdb
 
 import (
 	"database/sql"
@@ -58,20 +58,20 @@ func helpAndExit() {
 	log.Print(
 		`
 		Avalable usages are:\n
-		APP_ENV=./configs/development.yaml avdb help\n
-		APP_ENV=./configs/development.yaml avdb up\n
-		APP_ENV=./configs/development.yaml avdb up-to VERSION\n
-		APP_ENV=./configs/development.yaml avdb down\n
-		APP_ENV=./configs/development.yaml avdb down-to VERSION\n
-		APP_ENV=./configs/development.yaml avdb create MIGRATION_NAME\n
+		APP_ENV=./configs/development.yaml tonicdb help\n
+		APP_ENV=./configs/development.yaml tonicdb up\n
+		APP_ENV=./configs/development.yaml tonicdb up-to VERSION\n
+		APP_ENV=./configs/development.yaml tonicdb down\n
+		APP_ENV=./configs/development.yaml tonicdb down-to VERSION\n
+		APP_ENV=./configs/development.yaml tonicdb create MIGRATION_NAME\n
 
 		For production, run:\n
-		APP_ENV=./configs/production.yaml avdb help\n
-		APP_ENV=./configs/production.yaml avdb up\n
-		APP_ENV=./configs/production.yaml avdb up-to VERSION\n
-		APP_ENV=./configs/production.yaml avdb down\n
-		APP_ENV=./configs/production.yaml avdb down-to VERSION\n
-		APP_ENV=./configs/production.yaml avdb create MIGRATION_NAME\n
+		APP_ENV=./configs/production.yaml tonicdb help\n
+		APP_ENV=./configs/production.yaml tonicdb up\n
+		APP_ENV=./configs/production.yaml tonicdb up-to VERSION\n
+		APP_ENV=./configs/production.yaml tonicdb down\n
+		APP_ENV=./configs/production.yaml tonicdb down-to VERSION\n
+		APP_ENV=./configs/production.yaml tonicdb create MIGRATION_NAME\n
 		`,
 	)
 	os.Exit(1)

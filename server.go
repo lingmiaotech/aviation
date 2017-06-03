@@ -1,4 +1,4 @@
-package aviation
+package tonic
 
 import (
 	"fmt"
