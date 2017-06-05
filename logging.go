@@ -145,7 +145,7 @@ func getFormatter(format string, color bool) (logrus.Formatter, error) {
 }
 
 func getHandler(name string, formatter string) (*LogHandler, error) {
-	f, ok := Logging.Formatters[name]
+	f, ok := Logging.Formatters[formatter]
 	if !ok {
 		return nil, errors.New("tonic_error.log.invalid_formatter")
 	}
