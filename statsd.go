@@ -82,14 +82,14 @@ func (t Timer) Duration() time.Duration {
 func InitStatsd() error {
 
 	Statsd.AppName = Configs.GetString("app_name")
-	Statsd.Enabled = Configs.GetBool("sentry.enabled")
+	Statsd.Enabled = Configs.GetBool("statsd.enabled")
 
 	if !Statsd.Enabled {
 		return nil
 	}
 
-	host := Configs.GetString("sentry.host")
-	port := Configs.GetString("sentry.port")
+	host := Configs.GetString("statsd.host")
+	port := Configs.GetString("statsd.port")
 	address := fmt.Sprintf("%v:%v", host, port)
 	c, err := statsd.New(statsd.Address(address))
 	if err != nil || c == nil {

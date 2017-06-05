@@ -21,6 +21,11 @@ type LoggingClass struct {
 	Formatters map[string]logrus.Formatter
 }
 
+func (logging LoggingClass) GetDefaultLogger() *logrus.Logger {
+	defaultLogger, _ := logging.Loggers["default"]
+	return defaultLogger
+}
+
 func (logging LoggingClass) GetLogger(name string) *logrus.Logger {
 	logger, ok := logging.Loggers[name]
 	if ok {
