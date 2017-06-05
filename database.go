@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-var Engine *gorm.DB
+var Database *gorm.DB
 
 func InitDatabase() (err error) {
 	isDatabaseSet := Configs.IsSet("database")
@@ -25,12 +25,12 @@ func InitDatabase() (err error) {
 		return errors.New("tonic_error.database.empty_dbstring_config")
 	}
 
-	Engine, err = gorm.Open(driver, dbstring)
+	Database, err = gorm.Open(driver, dbstring)
 	if err != nil {
 		return
 	}
 
-	Engine.DB().SetConnMaxLifetime(1 * time.Hour)
-	Engine.DB().SetMaxOpenConns(15)
+	Database.DB().SetConnMaxLifetime(1 * time.Hour)
+	Database.DB().SetMaxOpenConns(15)
 	return
 }
