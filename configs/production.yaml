@@ -15,6 +15,11 @@ statsd:
   host: 10.47.124.81
   port: 8125
 
+redis:
+  enabled: True
+  host: 127.0.0.1
+  port: 16379
+
 logging:
   formatters:
     - name: plain

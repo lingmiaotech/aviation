@@ -10,6 +10,11 @@ kafka:
 statsd:
   enabled: False
 
+redis:
+  enabled: True
+  host: 127.0.0.1
+  port: 6379
+
 logging:
   formatters:
     - name: pretty

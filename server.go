@@ -45,6 +45,11 @@ func (s *Server) Start() (err error) {
 		return
 	}
 
+	err = InitRedis()
+	if err != nil {
+		return
+	}
+
 	err = InitDatabase()
 	if err != nil {
 		return
