@@ -10,8 +10,8 @@ import (
 
 type LogHandler struct {
 	Name      string
-	Hook      logrus.Hook
 	Formatter logrus.Formatter
+	GetHook   func(loggerName string) (logrus.Hook, error)
 }
 
 type LoggingClass struct {
@@ -151,14 +151,26 @@ func getHandler(name string, formatter string) (*LogHandler, error) {
 	}
 	switch name {
 	case "console":
-		return &LogHandler{Name: name, Formatter: f}, nil
+		return &LogHandler{
+			Name:      name,
+			Formatter: f,
+			GetHook: func(loggerName string) (logrus.Hook, error) {
+				return nil, errors.New("tonic_error.log.abuse_console_handler")
+			},
+		}, nil
 	case "kafka":
-		topic := fmt.Sprintf("%s.%s", Logging.AppName, name)
-		kafkaHook, err := NewKafkaHook(topic, logrus.AllLevels, f)
-		if err != nil {
-			return nil, err
-		}
-		return &LogHandler{Name: name, Hook: kafkaHook, Formatter: f}, nil
+		return &LogHandler{
+			Name:      name,
+			Formatter: f,
+			GetHook: func(loggerName string) (logrus.Hook, error) {
+				topic := fmt.Sprintf("%s.%s", Logging.AppName, loggerName)
+				kafkaHook, err := NewKafkaHook(topic, logrus.AllLevels, f)
+				if err != nil {
+					return nil, err
+				}
+				return kafkaHook, nil
+			},
+		}, nil
 	}
 	return nil, errors.New("tonic_error.log.unsupported_handler")
 }
@@ -196,7 +208,12 @@ func getLogger(name string, level string, handlers []string) (*logrus.Logger, er
 			continue
 		}
 
-		logger.Hooks.Add(loggerHandler.Hook)
+		hook, err := loggerHandler.GetHook(name)
+		if err != nil {
+			return nil, err
+		}
+
+		logger.Hooks.Add(hook)
 	}
 
 	return logger, nil
