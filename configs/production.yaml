@@ -6,11 +6,27 @@ sentry:
   dsn: http://abc:xyz@example.com/1
 
 kafka:
-  - 10.28.32.158:9092
-  - 10.171.174.67:9092
-  - 10.47.116.107:9092
+  enabled: True
+  brokers:
+    - 127.0.0.1:9092
 
 statsd:
   enabled: True
   host: 10.47.124.81
   port: 8125
+
+logging:
+  formatters:
+    - name: plain
+      format: text
+      color: false
+  handlers:
+    - name: console
+      formatter: plain
+  loggers:
+    - name: default
+      handlers: [console]
+      level: DEBUG
+    - name: topic
+      handlers: [console, kafka]
+      level: DEBUG

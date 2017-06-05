@@ -30,6 +30,16 @@ func (s *Server) Start() (err error) {
 		return
 	}
 
+	err = InitKafka()
+	if err != nil {
+		return
+	}
+
+	err = InitLogging()
+	if err != nil {
+		return
+	}
+
 	err = InitStatsd()
 	if err != nil {
 		return
