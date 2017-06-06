@@ -73,4 +73,5 @@ func (hook *KafkaHook) Fire(entry *logrus.Entry) error {
 
 	}(entry)
 
+	return nil
 }
