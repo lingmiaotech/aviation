@@ -43,18 +43,18 @@ func InitLogging() (err error) {
 
 	formatters, ok := Configs.Get("logging.formatters").([]map[string]interface{})
 	if !ok {
-		return errors.New("tonic_error.log.invalid_config_format")
+		return errors.New("tonic_error.logging.invalid_config_format.formatters")
 	}
 
 	for _, formatter := range formatters {
 		name, ok := formatter["name"].(string)
 		if !ok {
-			return errors.New("tonic_error.log.invalid_config_format")
+			return errors.New("tonic_error.logging.invalid_config_format.formatters.name")
 		}
 
 		format, ok := formatter["format"].(string)
 		if !ok {
-			return errors.New("tonic_error.log.invalid_config_format")
+			return errors.New("tonic_error.logging.invalid_config_format.formatters.format")
 		}
 
 		color, ok := formatter["color"].(bool)
@@ -72,18 +72,18 @@ func InitLogging() (err error) {
 
 	handlers, ok := Configs.Get("logging.handlers").([]map[string]interface{})
 	if !ok {
-		return errors.New("tonic_error.log.invalid_config_format")
+		return errors.New("tonic_error.logging.invalid_config_format.handlers")
 	}
 
 	for _, handler := range handlers {
 		name, ok := handler["name"].(string)
 		if !ok {
-			return errors.New("tonic_error.log.invalid_config_format")
+			return errors.New("tonic_error.logging.invalid_config_format.handlers.name")
 		}
 
 		formatter, ok := handler["formatter"].(string)
 		if !ok {
-			return errors.New("tonic_error.log.invalid_config_format")
+			return errors.New("tonic_error.logging.invalid_config_format.handlers.formatter")
 		}
 
 		h, err := getHandler(name, formatter)
@@ -96,23 +96,23 @@ func InitLogging() (err error) {
 
 	loggers, ok := Configs.Get("logging.loggers").([]map[string]interface{})
 	if !ok {
-		return errors.New("tonic_error.log.invalid_config_format")
+		return errors.New("tonic_error.logging.invalid_config_format.loggers")
 	}
 
 	for _, logger := range loggers {
 		name := logger["name"].(string)
 		if !ok {
-			return errors.New("tonic_error.log.invalid_config_format")
+			return errors.New("tonic_error.logging.invalid_config_format.loggers.name")
 		}
 
 		handlers, ok := logger["handlers"].([]string)
 		if !ok {
-			return errors.New("tonic_error.log.invalid_config_format")
+			return errors.New("tonic_error.logging.invalid_config_format.loggers.handlers")
 		}
 
 		level, ok := logger["level"].(string)
 		if !ok {
-			return errors.New("tonic_error.log.invalid_config_format")
+			return errors.New("tonic_error.logging.invalid_config_format.loggers.level")
 		}
 
 		l, err := getLogger(name, level, handlers)
@@ -125,7 +125,7 @@ func InitLogging() (err error) {
 
 	_, ok = Logging.Loggers["default"]
 	if !ok {
-		return errors.New("tonic_error.log.missing_default_logger")
+		return errors.New("tonic_error.logging.missing_default_logger")
 	}
 
 	return nil
@@ -141,13 +141,13 @@ func getFormatter(format string, color bool) (logrus.Formatter, error) {
 		}, nil
 
 	}
-	return nil, errors.New("tonic_error.log.unsupported_formatter")
+	return nil, errors.New("tonic_error.logging.unsupported_formatter")
 }
 
 func getHandler(name string, formatter string) (*LogHandler, error) {
 	f, ok := Logging.Formatters[formatter]
 	if !ok {
-		return nil, errors.New("tonic_error.log.invalid_formatter")
+		return nil, errors.New("tonic_error.logging.invalid_formatter")
 	}
 	switch name {
 	case "console":
@@ -155,7 +155,7 @@ func getHandler(name string, formatter string) (*LogHandler, error) {
 			Name:      name,
 			Formatter: f,
 			GetHook: func(loggerName string) (logrus.Hook, error) {
-				return nil, errors.New("tonic_error.log.abuse_console_handler")
+				return nil, errors.New("tonic_error.logging.abuse_console_handler")
 			},
 		}, nil
 	case "kafka":
@@ -172,7 +172,7 @@ func getHandler(name string, formatter string) (*LogHandler, error) {
 			},
 		}, nil
 	}
-	return nil, errors.New("tonic_error.log.unsupported_handler")
+	return nil, errors.New("tonic_error.logging.unsupported_handler")
 }
 
 func getLogger(name string, level string, handlers []string) (*logrus.Logger, error) {
@@ -194,7 +194,7 @@ func getLogger(name string, level string, handlers []string) (*logrus.Logger, er
 
 		loggerHandler, ok := Logging.Handler[handler]
 		if !ok {
-			return nil, fmt.Errorf("tonic_error.log.invalid_handler.%s", handler)
+			return nil, fmt.Errorf("tonic_error.logging.invalid_handler.%s", handler)
 		}
 		loggerHandlers = append(loggerHandlers, loggerHandler)
 
