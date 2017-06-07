@@ -41,7 +41,7 @@ func InitLogging() (err error) {
 
 	Statsd.AppName = Configs.GetString("app_name")
 
-	formatters, ok := Configs.Get("logging.formatters").([]map[string]interface{})
+	formatters, ok := Configs.Get("logging.formatters").([]map[interface{}]interface{})
 	if !ok {
 		return errors.New("tonic_error.logging.invalid_config_format.formatters")
 	}
@@ -70,7 +70,7 @@ func InitLogging() (err error) {
 		Logging.Formatters[name] = f
 	}
 
-	handlers, ok := Configs.Get("logging.handlers").([]map[string]interface{})
+	handlers, ok := Configs.Get("logging.handlers").([]map[interface{}]interface{})
 	if !ok {
 		return errors.New("tonic_error.logging.invalid_config_format.handlers")
 	}
@@ -81,12 +81,17 @@ func InitLogging() (err error) {
 			return errors.New("tonic_error.logging.invalid_config_format.handlers.name")
 		}
 
+		handle, ok := handler["handle"].(string)
+		if !ok {
+			return errors.New("tonic_error.logging.invalid_config_format.handlers.handle")
+		}
+
 		formatter, ok := handler["formatter"].(string)
 		if !ok {
 			return errors.New("tonic_error.logging.invalid_config_format.handlers.formatter")
 		}
 
-		h, err := getHandler(name, formatter)
+		h, err := getHandler(handle, formatter)
 		if err != nil {
 			return err
 		}
@@ -94,7 +99,7 @@ func InitLogging() (err error) {
 		Logging.Handler[name] = h
 	}
 
-	loggers, ok := Configs.Get("logging.loggers").([]map[string]interface{})
+	loggers, ok := Configs.Get("logging.loggers").([]map[interface{}]interface{})
 	if !ok {
 		return errors.New("tonic_error.logging.invalid_config_format.loggers")
 	}

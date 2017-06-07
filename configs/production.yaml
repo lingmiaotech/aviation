@@ -27,6 +27,10 @@ logging:
       color: false
   handlers:
     - name: console
+      handle: console
+      formatter: plain
+    - name: kafka
+      handle: kafka
       formatter: plain
   loggers:
     - name: default

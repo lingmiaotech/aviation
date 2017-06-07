@@ -5,7 +5,29 @@ sentry:
   enabled: False
 
 kafka:
-  - 127.0.0.1:9092
+  enabled: False
 
 statsd:
   enabled: False
+
+redis:
+  enabled: True
+  host: 127.0.0.1
+  port: 6379
+
+logging:
+  formatters:
+    - name: pretty
+      format: text
+      color: true
+  handlers:
+    - name: console
+      handle: console
+      formatter: pretty
+  loggers:
+    - name: default
+      handlers: [console]
+      level: DEBUG
+    - name: topic
+      handlers: [console]
+      level: DEBUG
