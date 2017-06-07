@@ -6,38 +6,10 @@ import (
 	"strings"
 )
 
-type Route struct {
-	pattern string
-	method  string
-	handler func(c *gin.Context)
-}
-
-func (s *Server) AddRoute(pattern string, method string, handler func(c *gin.Context)) {
-	s.Routes = append(s.Routes, Route{pattern: pattern, method: method, handler: handler})
-}
-
 func (s *Server) InitRoutes() error {
 
 	s.App.Use(RequestHandler)
 
-	for _, route := range s.Routes {
-		switch route.method {
-		case "GET":
-			s.App.GET(route.pattern, route.handler)
-		case "POST":
-			s.App.POST(route.pattern, route.handler)
-		case "PUT":
-			s.App.PUT(route.pattern, route.handler)
-		case "OPTIONS":
-			s.App.OPTIONS(route.pattern, route.handler)
-		case "DELETE":
-			s.App.DELETE(route.pattern, route.handler)
-		default:
-			lowerMethod := strings.ToLower(route.method)
-			return fmt.Errorf("tonic_error.routes.invalid_method.%s", lowerMethod)
-
-		}
-	}
 	return nil
 }
 

@@ -6,9 +6,8 @@ import (
 )
 
 type Server struct {
-	App    *gin.Engine
-	Port   int
-	Routes []Route
+	App  *gin.Engine
+	Port int
 }
 
 func New() (server *Server, err error) {
@@ -51,9 +50,8 @@ func New() (server *Server, err error) {
 	}
 
 	server = &Server{
-		App:    gin.Default(),
-		Port:   8080,
-		Routes: []Route{},
+		App:  gin.Default(),
+		Port: 8080,
 	}
 
 	err = server.InitRoutes()

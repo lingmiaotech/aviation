@@ -23,7 +23,7 @@ var Statsd StatsdClass
 func (s *StatsdClass) Increment(bucket string) {
 	b := s.getBucket(bucket)
 	if !s.Enabled {
-		fmt.Println(fmt.Sprintf("[STATS] key=%s count=1", b))
+		fmt.Println(fmt.Sprintf("[STATSD] key=%s count=1", b))
 		return
 	}
 	s.Client.Increment(b)
@@ -33,7 +33,7 @@ func (s *StatsdClass) Increment(bucket string) {
 func (s *StatsdClass) Timing(bucket string, delta int) {
 	b := s.getBucket(bucket)
 	if !s.Enabled {
-		fmt.Println(fmt.Sprintf("[STATS] key=%s time_delta=%d(ms)", b, delta))
+		fmt.Println(fmt.Sprintf("[STATSD] key=%s time_delta=%d(ms)", b, delta))
 		return
 	}
 	s.Client.Timing(b, delta)
@@ -42,7 +42,7 @@ func (s *StatsdClass) Timing(bucket string, delta int) {
 func (s *StatsdClass) Count(bucket string, n int) {
 	b := s.getBucket(bucket)
 	if !s.Enabled {
-		fmt.Println(fmt.Sprintf("[STATS] key=%v count=%d", b, n))
+		fmt.Println(fmt.Sprintf("[STATSD] key=%v count=%d", b, n))
 		return
 	}
 	s.Client.Count(b, n)
@@ -51,7 +51,7 @@ func (s *StatsdClass) Count(bucket string, n int) {
 func (s *StatsdClass) Gauge(bucket string, n int) {
 	b := s.getBucket(bucket)
 	if !s.Enabled {
-		fmt.Println(fmt.Sprintf("[STATS] key=%v gauge=%d", b, n))
+		fmt.Println(fmt.Sprintf("[STATSD] key=%v gauge=%d", b, n))
 		return
 	}
 	s.Client.Gauge(b, n)
