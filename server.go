@@ -6,7 +6,7 @@ import (
 )
 
 type Server struct {
-	app    *gin.Engine
+	App    *gin.Engine
 	Port   int
 	Routes []Route
 }
