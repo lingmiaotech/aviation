@@ -18,20 +18,20 @@ func (s *Server) AddRoute(pattern string, method string, handler func(c *gin.Con
 
 func (s *Server) InitRoutes() error {
 
-	s.app.Use(RequestHandler)
+	s.App.Use(RequestHandler)
 
 	for _, route := range s.Routes {
 		switch route.method {
 		case "GET":
-			s.app.GET(route.pattern, route.handler)
+			s.App.GET(route.pattern, route.handler)
 		case "POST":
-			s.app.POST(route.pattern, route.handler)
+			s.App.POST(route.pattern, route.handler)
 		case "PUT":
-			s.app.PUT(route.pattern, route.handler)
+			s.App.PUT(route.pattern, route.handler)
 		case "OPTIONS":
-			s.app.OPTIONS(route.pattern, route.handler)
+			s.App.OPTIONS(route.pattern, route.handler)
 		case "DELETE":
-			s.app.DELETE(route.pattern, route.handler)
+			s.App.DELETE(route.pattern, route.handler)
 		default:
 			lowerMethod := strings.ToLower(route.method)
 			return fmt.Errorf("tonic_error.routes.invalid_method.%s", lowerMethod)

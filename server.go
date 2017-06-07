@@ -51,7 +51,7 @@ func New() (server *Server, err error) {
 	}
 
 	server = &Server{
-		app:    gin.Default(),
+		App:    gin.Default(),
 		Port:   8080,
 		Routes: []Route{},
 	}
@@ -69,7 +69,7 @@ func (s *Server) SetPort(p int) {
 }
 
 func (s *Server) Start() (err error) {
-	err = s.app.Run(fmt.Sprintf(":%d", s.Port))
+	err = s.App.Run(fmt.Sprintf(":%d", s.Port))
 	return
 }
 
