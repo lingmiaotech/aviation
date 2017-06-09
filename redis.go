@@ -6,8 +6,6 @@ import (
 )
 
 var Redis *redis.Client
-var RedisPub *redis.Client
-var RedisSub *redis.Client
 
 func InitRedis() (err error) {
 
@@ -26,23 +24,33 @@ func InitRedis() (err error) {
 		DB:       db,
 	})
 
-	pubEnabled := Configs.GetBool("redis.pub_enabled")
-	if pubEnabled {
-		RedisPub = redis.NewClient(&redis.Options{
-			Addr:     fmt.Sprintf("%s:%d", host, port),
-			Password: "",
-			DB:       db,
-		})
-	}
-
-	subEnabled := Configs.GetBool("redis.sub_enabled")
-	if subEnabled {
-		RedisSub = redis.NewClient(&redis.Options{
-			Addr:     fmt.Sprintf("%s:%d", host, port),
-			Password: "",
-			DB:       db,
-		})
-	}
-
 	return
+}
+
+func GetPub() *redis.Client {
+	host := Configs.GetString("redis.host")
+	port := Configs.GetInt("redis.port")
+	db := Configs.GetInt("redis.db")
+
+	RedisPub := redis.NewClient(&redis.Options{
+		Addr:     fmt.Sprintf("%s:%d", host, port),
+		Password: "",
+		DB:       db,
+	})
+
+	return RedisPub
+}
+
+func GetSub() *redis.Client {
+	host := Configs.GetString("redis.host")
+	port := Configs.GetInt("redis.port")
+	db := Configs.GetInt("redis.db")
+
+	RedisSub := redis.NewClient(&redis.Options{
+		Addr:     fmt.Sprintf("%s:%d", host, port),
+		Password: "",
+		DB:       db,
+	})
+
+	return RedisSub
 }
