@@ -6,6 +6,8 @@ import (
 )
 
 var Redis *redis.Client
+var RedisPub *redis.Client
+var RedisSub *redis.Client
 
 func InitRedis() (err error) {
 
@@ -23,6 +25,24 @@ func InitRedis() (err error) {
 		Password: "",
 		DB:       db,
 	})
+
+	pubEnabled := Configs.GetBool("redis.pub_enabled")
+	if pubEnabled {
+		RedisPub = redis.NewClient(&redis.Options{
+			Addr:     fmt.Sprintf("%s:%d", host, port),
+			Password: "",
+			DB:       db,
+		})
+	}
+
+	subEnabled := Configs.GetBool("redis.sub_enabled")
+	if subEnabled {
+		RedisSub = redis.NewClient(&redis.Options{
+			Addr:     fmt.Sprintf("%s:%d", host, port),
+			Password: "",
+			DB:       db,
+		})
+	}
 
 	return
 }

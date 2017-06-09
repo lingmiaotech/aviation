@@ -19,6 +19,8 @@ redis:
   enabled: True
   host: 127.0.0.1
   port: 16379
+  pub_enabled: True
+  sub_enabled: True
 
 logging:
   formatters:
