@@ -24,5 +24,4 @@ msc/
 
 env/
 
-*.lock
 vendor

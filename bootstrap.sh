@@ -1,16 +1,8 @@
 #!/bin/bash
 
-if [ ! -d "env" ]; then
-  echo "Create virtual environment..."
-  mkdir -p env/bin
-  cp .bootstrap/.activate env/bin/activate
-fi
-source env/bin/activate
+export http_proxy=http://localhost:8123
+export https_proxy=http://localhost:8123
 
-echo "Install dependencies..."
-gopm get -v -u -g
-
-echo "Install assert"
-gopm get -u -v -g github.com/stretchr/testify/assert
+glide install
 
 echo "Finished. Now go hack!"

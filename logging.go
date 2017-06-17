@@ -43,7 +43,7 @@ func InitLogging() (err error) {
 	Logging.Handler = make(map[string]*LogHandler)
 	Logging.Formatters = make(map[string]logrus.Formatter)
 
-	Statsd.AppName = Configs.GetString("app_name")
+	Logging.AppName = Configs.GetString("app_name")
 
 	formatters, ok := Configs.Get("logging.formatters").([]interface{})
 	if !ok {
