@@ -1,6 +1,7 @@
 package tonic
 
 import (
+	"fmt"
 	"github.com/Shopify/sarama"
 	"time"
 )
@@ -28,6 +29,8 @@ func InitKafka() (err error) {
 	kafkaConfig.Producer.RequiredAcks = sarama.WaitForLocal       // Only wait for the leader to ack
 	kafkaConfig.Producer.Compression = sarama.CompressionSnappy   // Compress messages
 	kafkaConfig.Producer.Flush.Frequency = 500 * time.Millisecond // Flush batches every 500ms
+	kafkaConfig.Producer.Retry.Max = 10
+	kafkaConfig.Producer.Retry.Backoff = 1 * time.Second
 
 	producer, err := sarama.NewAsyncProducer(brokers, kafkaConfig)
 	if err != nil {
@@ -35,6 +38,12 @@ func InitKafka() (err error) {
 	}
 
 	Kafka.Producer = producer
+
+	go func(producer sarama.AsyncProducer) {
+		for e := range producer.Errors() {
+			fmt.Println(e)
+		}
+	}(producer)
 
 	return
 }
