@@ -163,6 +163,15 @@ func getFormatter(format string, color bool) (logrus.Formatter, error) {
 			ForceColors:     color,
 			TimestampFormat: "2006-01-02T15:04:05.999Z07:00",
 		}, nil
+	case "json":
+		return &logrus.JSONFormatter{
+			TimestampFormat: "2006-01-02T15:04:05.999Z07:00",
+			FieldMap: logrus.FieldMap{
+				logrus.FieldKeyTime:  "timestamp",
+				logrus.FieldKeyLevel: "level",
+				logrus.FieldKeyMsg:   "message",
+			},
+		}, nil
 
 	}
 	return nil, errors.New("tonic_error.logging.unsupported_formatter")
