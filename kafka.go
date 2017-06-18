@@ -37,7 +37,7 @@ func InitKafka() (err error) {
 		return err
 	}
 
-	Kafka.Producer = &producer
+	Kafka.Producer = producer
 
 	return
 }
