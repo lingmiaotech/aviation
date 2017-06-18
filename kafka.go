@@ -1,7 +1,6 @@
 package tonic
 
 import (
-	"fmt"
 	"github.com/Shopify/sarama"
 	"time"
 )
@@ -9,7 +8,7 @@ import (
 type KafkaClass struct {
 	AppName  string
 	Enabled  bool
-	Producer sarama.AsyncProducer
+	Producer sarama.SyncProducer
 }
 
 var Kafka KafkaClass
@@ -29,21 +28,36 @@ func InitKafka() (err error) {
 	kafkaConfig.Producer.RequiredAcks = sarama.WaitForLocal       // Only wait for the leader to ack
 	kafkaConfig.Producer.Compression = sarama.CompressionSnappy   // Compress messages
 	kafkaConfig.Producer.Flush.Frequency = 500 * time.Millisecond // Flush batches every 500ms
-	kafkaConfig.Producer.Retry.Max = 10
-	kafkaConfig.Producer.Retry.Backoff = 1 * time.Second
+	kafkaConfig.Producer.Retry.Max = 3
+	kafkaConfig.Producer.Return.Errors = true
+	kafkaConfig.Producer.Return.Successes = true
 
-	producer, err := sarama.NewAsyncProducer(brokers, kafkaConfig)
+	producer, err := sarama.NewSyncProducer(brokers, kafkaConfig)
 	if err != nil {
 		return err
 	}
 
-	Kafka.Producer = producer
-
-	go func(producer sarama.AsyncProducer) {
-		for e := range producer.Errors() {
-			fmt.Println(e)
-		}
-	}(producer)
+	Kafka.Producer = &producer
 
 	return
+}
+
+func (k KafkaClass) SendMessage(message *sarama.ProducerMessage) (int32, int64, error) {
+	if !k.Enabled {
+		return -1, -1, nil
+	}
+	partition, offset, err := k.Producer.SendMessage(message)
+	return partition, offset, err
+}
+
+func (k KafkaClass) SendMessageWithRetry(message *sarama.ProducerMessage, retry int, backoff time.Duration) (int32, int64, error) {
+	if !k.Enabled {
+		return -1, -1, nil
+	}
+	partition, offset, err := k.Producer.SendMessage(message)
+	if err != nil && retry > 1 {
+		time.Sleep(backoff)
+		return k.SendMessageWithRetry(message, retry-1, backoff)
+	}
+	return partition, offset, err
 }

@@ -42,34 +42,18 @@ func (hook *KafkaHook) Fire(entry *logrus.Entry) error {
 
 	go func(entry *logrus.Entry) {
 
-		// Check time for partition key
-		var partitionKey sarama.ByteEncoder
-
-		// Get field time
-		t, _ := entry.Data["time"].(time.Time)
-
-		// Convert it to bytes
-		b, err := t.MarshalBinary()
-
-		if err != nil {
-			fmt.Println(err)
-		}
-
-		partitionKey = sarama.ByteEncoder(b)
-		// Format before writing
-		b, err = hook.formatter.Format(entry)
-
+		b, err := hook.formatter.Format(entry)
 		if err != nil {
 			fmt.Println(err)
 		}
 
 		value := sarama.ByteEncoder(b)
-
-		Kafka.Producer.Input() <- &sarama.ProducerMessage{
-			Key:   partitionKey,
+		message := &sarama.ProducerMessage{
 			Topic: hook.topic,
 			Value: value,
 		}
+
+		Kafka.SendMessageWithRetry(message, 3, 1*time.Second)
 
 	}(entry)
 
