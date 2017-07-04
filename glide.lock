@@ -1,5 +1,5 @@
-hash: de71a8665e012de1c793a1fa412db2d271ff00b8c09c0b59ccee82838faf8f51
-updated: 2017-06-17T14:01:41.897309397+08:00
+hash: aee9a3e0ac250f070d1b6e6081656eede7275817df4cffa63fb5ab972ffb9a65
+updated: 2017-07-04T09:23:14.632848701+08:00
 imports:
 - name: github.com/certifi/gocertifi
   version: a9c833d2837d3b16888d55d5aafa9ffe9afb22b0
@@ -18,14 +18,16 @@ imports:
 - name: github.com/fsnotify/fsnotify
   version: 4da3e2cfbabc9f751898f250b49f2439785783a1
 - name: github.com/getsentry/raven-go
-  version: d175f85701dfbf44cb0510114c9943e665e60907
+  version: b9f2aa2550bb0e89ab351d6fd59decd608b84ac1
+- name: github.com/gin-contrib/sse
+  version: 22d885f9ecc78bf4ee5d72b937e4bbcdc58e8cae
 - name: github.com/gin-gonic/gin
-  version: e2212d40c62a98b388a5eb48ecbdcf88534688ba
+  version: d459835d2b077e44f7c9b453505ee29881d5d12d
   subpackages:
   - binding
   - render
 - name: github.com/go-redis/redis
-  version: 663bb76bcc3763c41877b63671003705a47289c5
+  version: 167410bcd747d34243efbf53332a7c00b6bd9377
   subpackages:
   - internal
   - internal/consistenthash
@@ -39,7 +41,7 @@ imports:
   subpackages:
   - proto
 - name: github.com/golang/snappy
-  version: 553a641470496b2327abcac10b36396bd98e45c9
+  version: 723cc1e459b8eea2dea4583200fd60757d40097a
 - name: github.com/hashicorp/hcl
   version: 392dba7d905ed5d04a5794ba89f558b27e2ba1ca
   subpackages:
@@ -59,8 +61,6 @@ imports:
   version: 1c35d901db3da928c72a72d8458480cc9ade058f
 - name: github.com/magiconair/properties
   version: 51463bfca2576e06c62a8504b5c0f06d61312647
-- name: github.com/manucorporat/sse
-  version: ee05b128a739a0fb76c7ebd3ae4810c1de808d6d
 - name: github.com/mattn/go-isatty
   version: fc9e8d8ef48496124e79ae0df75490096eccf6fe
 - name: github.com/mitchellh/mapstructure
@@ -95,12 +95,16 @@ imports:
   version: e57e3eeb33f795204c1ca35f56c44f83227c6e66
 - name: github.com/spf13/viper
   version: a1ecfa6a20bd4ef9e9caded262ee1b1b26847675
-- name: golang.org/x/net
-  version: f315505cf3349909cdf013ea56690da34e96a451
+- name: github.com/ugorji/go
+  version: 5efa3251c7f7d05e5d9704a69a984ec9f1386a40
   subpackages:
-  - context
+  - codec
+- name: go4.org
+  version: 034d17a462f7b2dcd1a4a73553ec5357ff6e6c6e
+  subpackages:
+  - syncutil
 - name: golang.org/x/sys
-  version: fb4cac33e3196ff7f507ab9b2d2a44b0142f5b5a
+  version: a646d33e2ee3172a661fc09bca23bb4889a41bc8
   subpackages:
   - unix
 - name: golang.org/x/text
