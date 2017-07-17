@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/lingmiaotech/tonic/configs"
+	"github.com/lingmiaotech/tonic/kafka"
 )
 
 type Server struct {
@@ -20,7 +21,7 @@ func New() (server *Server, err error) {
 
 	gin.SetMode(GetServerMode())
 
-	err = InitKafka()
+	err = kafka.InitKafka()
 	if err != nil {
 		return
 	}
