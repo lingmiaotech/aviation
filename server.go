@@ -6,6 +6,7 @@ import (
 	"github.com/lingmiaotech/tonic/configs"
 	"github.com/lingmiaotech/tonic/kafka"
 	"github.com/lingmiaotech/tonic/logging"
+	"github.com/lingmiaotech/tonic/sentry"
 )
 
 type Server struct {
@@ -37,7 +38,7 @@ func New() (server *Server, err error) {
 		return
 	}
 
-	err = InitSentry()
+	err = sentry.InitSentry()
 	if err != nil {
 		return
 	}
