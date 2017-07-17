@@ -2,10 +2,13 @@ package tonic
 
 import (
 	"fmt"
+	"github.com/CrowdSurge/banner.git"
 	"github.com/gin-gonic/gin"
 	"github.com/lingmiaotech/tonic/configs"
+	"github.com/lingmiaotech/tonic/database"
 	"github.com/lingmiaotech/tonic/kafka"
 	"github.com/lingmiaotech/tonic/logging"
+	"github.com/lingmiaotech/tonic/redis"
 	"github.com/lingmiaotech/tonic/sentry"
 	"github.com/lingmiaotech/tonic/statsd"
 )
@@ -15,43 +18,46 @@ type Server struct {
 	Port int
 }
 
-func New() (server *Server, err error) {
+func New() (*Server, error) {
+
+	var server *Server
+	var err error
 
 	err = configs.InitConfigs()
 	if err != nil {
-		return
+		return server, err
 	}
 
 	gin.SetMode(GetServerMode())
 
 	err = kafka.InitKafka()
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	err = logging.InitLogging()
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	err = statsd.InitStatsd()
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	err = sentry.InitSentry()
 	if err != nil {
-		return
+		return nil, err
 	}
 
-	err = InitRedis()
+	err = redis.InitRedis()
 	if err != nil {
-		return
+		return nil, err
 	}
 
-	err = InitDatabase()
+	err = database.InitDatabase()
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	server = &Server{
@@ -61,19 +67,25 @@ func New() (server *Server, err error) {
 
 	err = server.InitRoutes()
 	if err != nil {
-		return
+		return nil, err
 	}
 
-	return
+	return server, nil
 }
 
 func (s *Server) SetPort(p int) {
 	s.Port = p
 }
 
-func (s *Server) Start() (err error) {
-	err = s.App.Run(fmt.Sprintf(":%d", s.Port))
-	return
+func (s *Server) Start() error {
+	banner.Print("CHEERS!")
+
+	err := s.App.Run(fmt.Sprintf(":%d", s.Port))
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func GetServerMode() string {

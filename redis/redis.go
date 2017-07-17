@@ -1,4 +1,4 @@
-package tonic
+package redis
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"github.com/lingmiaotech/tonic/configs"
 )
 
-var Redis *redis.Client
+var Client *redis.Client
 
 func InitRedis() (err error) {
 
@@ -19,7 +19,7 @@ func InitRedis() (err error) {
 	port := configs.GetInt("redis.port")
 	db := configs.GetInt("redis.db")
 
-	Redis = redis.NewClient(&redis.Options{
+	Client = redis.NewClient(&redis.Options{
 		Addr:     fmt.Sprintf("%s:%d", host, port),
 		Password: "",
 		DB:       db,
@@ -33,13 +33,13 @@ func GetPub() *redis.Client {
 	port := configs.GetInt("redis.port")
 	db := configs.GetInt("redis.db")
 
-	RedisPub := redis.NewClient(&redis.Options{
+	PubClient := redis.NewClient(&redis.Options{
 		Addr:     fmt.Sprintf("%s:%d", host, port),
 		Password: "",
 		DB:       db,
 	})
 
-	return RedisPub
+	return PubClient
 }
 
 func GetSub() *redis.Client {
@@ -47,11 +47,11 @@ func GetSub() *redis.Client {
 	port := configs.GetInt("redis.port")
 	db := configs.GetInt("redis.db")
 
-	RedisSub := redis.NewClient(&redis.Options{
+	SubClient := redis.NewClient(&redis.Options{
 		Addr:     fmt.Sprintf("%s:%d", host, port),
 		Password: "",
 		DB:       db,
 	})
 
-	return RedisSub
+	return SubClient
 }

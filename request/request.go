@@ -1,4 +1,4 @@
-package tonic
+package request
 
 import (
 	"bytes"
@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-type RequestOptions grequests.RequestOptions
+type Opts grequests.RequestOptions
 
 type Response struct {
 	StatusCode  int
@@ -16,9 +16,9 @@ type Response struct {
 	RawResponse *http.Response
 }
 
-func Get(url string, ro *RequestOptions) (*Response, error) {
-	ro.fixJsonRequestEscapeIssue()
-	response, err := grequests.Get(url, (*grequests.RequestOptions)(ro))
+func Get(url string, opts *Opts) (*Response, error) {
+	opts.fixJsonRequestEscapeIssue()
+	response, err := grequests.Get(url, (*grequests.RequestOptions)(opts))
 	return &Response{
 		StatusCode:  response.StatusCode,
 		Header:      response.Header,
@@ -27,9 +27,9 @@ func Get(url string, ro *RequestOptions) (*Response, error) {
 	}, err
 }
 
-func Put(url string, ro *RequestOptions) (*Response, error) {
-	ro.fixJsonRequestEscapeIssue()
-	response, err := grequests.Put(url, (*grequests.RequestOptions)(ro))
+func Put(url string, opts *Opts) (*Response, error) {
+	opts.fixJsonRequestEscapeIssue()
+	response, err := grequests.Put(url, (*grequests.RequestOptions)(opts))
 	return &Response{
 		StatusCode:  response.StatusCode,
 		Header:      response.Header,
@@ -38,9 +38,9 @@ func Put(url string, ro *RequestOptions) (*Response, error) {
 	}, err
 }
 
-func Patch(url string, ro *RequestOptions) (*Response, error) {
-	ro.fixJsonRequestEscapeIssue()
-	response, err := grequests.Patch(url, (*grequests.RequestOptions)(ro))
+func Patch(url string, opts *Opts) (*Response, error) {
+	opts.fixJsonRequestEscapeIssue()
+	response, err := grequests.Patch(url, (*grequests.RequestOptions)(opts))
 	return &Response{
 		StatusCode:  response.StatusCode,
 		Header:      response.Header,
@@ -49,9 +49,9 @@ func Patch(url string, ro *RequestOptions) (*Response, error) {
 	}, err
 }
 
-func Delete(url string, ro *RequestOptions) (*Response, error) {
-	ro.fixJsonRequestEscapeIssue()
-	response, err := grequests.Delete(url, (*grequests.RequestOptions)(ro))
+func Delete(url string, opts *Opts) (*Response, error) {
+	opts.fixJsonRequestEscapeIssue()
+	response, err := grequests.Delete(url, (*grequests.RequestOptions)(opts))
 	return &Response{
 		StatusCode:  response.StatusCode,
 		Header:      response.Header,
@@ -60,9 +60,9 @@ func Delete(url string, ro *RequestOptions) (*Response, error) {
 	}, err
 }
 
-func Post(url string, ro *RequestOptions) (*Response, error) {
-	ro.fixJsonRequestEscapeIssue()
-	response, err := grequests.Post(url, (*grequests.RequestOptions)(ro))
+func Post(url string, opts *Opts) (*Response, error) {
+	opts.fixJsonRequestEscapeIssue()
+	response, err := grequests.Post(url, (*grequests.RequestOptions)(opts))
 	return &Response{
 		StatusCode:  response.StatusCode,
 		Header:      response.Header,
@@ -71,9 +71,9 @@ func Post(url string, ro *RequestOptions) (*Response, error) {
 	}, err
 }
 
-func Head(url string, ro *RequestOptions) (*Response, error) {
-	ro.fixJsonRequestEscapeIssue()
-	response, err := grequests.Head(url, (*grequests.RequestOptions)(ro))
+func Head(url string, opts *Opts) (*Response, error) {
+	opts.fixJsonRequestEscapeIssue()
+	response, err := grequests.Head(url, (*grequests.RequestOptions)(opts))
 	return &Response{
 		StatusCode:  response.StatusCode,
 		Header:      response.Header,
@@ -82,9 +82,9 @@ func Head(url string, ro *RequestOptions) (*Response, error) {
 	}, err
 }
 
-func Options(url string, ro *RequestOptions) (*Response, error) {
-	ro.fixJsonRequestEscapeIssue()
-	response, err := grequests.Options(url, (*grequests.RequestOptions)(ro))
+func Options(url string, opts *Opts) (*Response, error) {
+	opts.fixJsonRequestEscapeIssue()
+	response, err := grequests.Options(url, (*grequests.RequestOptions)(opts))
 	return &Response{
 		StatusCode:  response.StatusCode,
 		Header:      response.Header,
@@ -104,9 +104,9 @@ func (r *Response) JSON(userStruct interface{}) error {
 
 }
 
-func (ro *RequestOptions) fixJsonRequestEscapeIssue() error {
+func (opts *Opts) fixJsonRequestEscapeIssue() error {
 
-	switch ro.JSON.(type) {
+	switch opts.JSON.(type) {
 
 	case string:
 	case []byte:
@@ -116,11 +116,11 @@ func (ro *RequestOptions) fixJsonRequestEscapeIssue() error {
 		buffer := bytes.Buffer{}
 		encoder := json.NewEncoder(buffer)
 		encoder.SetEscapeHTML(false)
-		err := encoder.Encode(ro.JSON)
+		err := encoder.Encode(opts.JSON)
 		if err != nil {
 			return err
 		}
-		ro.JSON = buffer.Bytes()
+		opts.JSON = buffer.Bytes()
 	}
 	return nil
 

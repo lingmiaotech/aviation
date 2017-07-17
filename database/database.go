@@ -1,4 +1,4 @@
-package tonic
+package database
 
 import (
 	"errors"
@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-var Database *gorm.DB
+var Engine *gorm.DB
 
 func InitDatabase() (err error) {
 	isDatabaseSet := configs.IsSet("database")
@@ -26,12 +26,12 @@ func InitDatabase() (err error) {
 		return errors.New("tonic_error.database.empty_dbstring_config")
 	}
 
-	Database, err = gorm.Open(driver, dbstring)
+	Engine, err = gorm.Open(driver, dbstring)
 	if err != nil {
 		return
 	}
 
-	Database.DB().SetConnMaxLifetime(1 * time.Hour)
-	Database.DB().SetMaxOpenConns(15)
+	Engine.DB().SetConnMaxLifetime(1 * time.Hour)
+	Engine.DB().SetMaxOpenConns(15)
 	return
 }

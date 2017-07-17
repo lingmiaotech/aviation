@@ -22,3 +22,4 @@ import:
 - package: github.com/getsentry/raven-go
 - package: github.com/levigross/grequests
   version: ~0.9
+- package: github.com/CrowdSurge/banner
