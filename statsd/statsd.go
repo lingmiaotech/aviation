@@ -1,4 +1,4 @@
-package tonic
+package statsd
 
 import (
 	"fmt"
@@ -8,71 +8,70 @@ import (
 	"time"
 )
 
-type StatsdClass struct {
+type InstanceClass struct {
 	AppName string
 	Enabled bool
 	Client  *statsd.Client
 }
 
 type Timer struct {
-	start  time.Time
-	client *StatsdClass
+	start time.Time
 }
 
-var Statsd StatsdClass
+var Instance InstanceClass
 
-func (s *StatsdClass) Increment(bucket string) {
-	b := s.getBucket(bucket)
-	if !s.Enabled {
+func Increment(bucket string) {
+	b := getBucket(bucket)
+	if !Instance.Enabled {
 		fmt.Println(fmt.Sprintf("[STATSD] key=%s count=1", b))
 		return
 	}
-	s.Client.Increment(b)
+	Instance.Client.Increment(b)
 }
 
 // Timing takes bucket name and delta in milliseconds
-func (s *StatsdClass) Timing(bucket string, delta int) {
-	b := s.getBucket(bucket)
-	if !s.Enabled {
+func Timing(bucket string, delta int) {
+	b := getBucket(bucket)
+	if !Instance.Enabled {
 		fmt.Println(fmt.Sprintf("[STATSD] key=%s time_delta=%d(ms)", b, delta))
 		return
 	}
-	s.Client.Timing(b, delta)
+	Instance.Client.Timing(b, delta)
 }
 
-func (s *StatsdClass) Count(bucket string, n int) {
-	b := s.getBucket(bucket)
-	if !s.Enabled {
+func Count(bucket string, n int) {
+	b := getBucket(bucket)
+	if !Instance.Enabled {
 		fmt.Println(fmt.Sprintf("[STATSD] key=%v count=%d", b, n))
 		return
 	}
-	s.Client.Count(b, n)
+	Instance.Client.Count(b, n)
 }
 
-func (s *StatsdClass) Gauge(bucket string, n int) {
-	b := s.getBucket(bucket)
-	if !s.Enabled {
+func Gauge(bucket string, n int) {
+	b := getBucket(bucket)
+	if !Instance.Enabled {
 		fmt.Println(fmt.Sprintf("[STATSD] key=%v gauge=%d", b, n))
 		return
 	}
-	s.Client.Gauge(b, n)
+	Instance.Client.Gauge(b, n)
 }
 
-func (s *StatsdClass) getBucket(bucket string) string {
+func getBucket(bucket string) string {
 	hostName, err := os.Hostname()
 	if err != nil {
 		hostName = "UNKNOWNHOST"
 	}
-	return fmt.Sprintf("%v.%v.%v", hostName, s.AppName, bucket)
+	return fmt.Sprintf("%v.%v.%v", hostName, Instance.AppName, bucket)
 }
 
-func (s *StatsdClass) NewTimer() Timer {
-	return Timer{start: time.Now(), client: s}
+func NewTimer() Timer {
+	return Timer{start: time.Now()}
 }
 
 // Send sends the time elapsed since the creation of the Timing.
 func (t Timer) Send(bucket string) {
-	t.client.Timing(bucket, int(t.Duration()/time.Millisecond))
+	Timing(bucket, int(t.Duration()/time.Millisecond))
 }
 
 // Duration returns the time elapsed since the creation of the Timing.
@@ -82,10 +81,10 @@ func (t Timer) Duration() time.Duration {
 
 func InitStatsd() error {
 
-	Statsd.AppName = configs.GetString("app_name")
-	Statsd.Enabled = configs.GetBool("statsd.enabled")
+	Instance.AppName = configs.GetString("app_name")
+	Instance.Enabled = configs.GetBool("statsd.enabled")
 
-	if !Statsd.Enabled {
+	if !Instance.Enabled {
 		return nil
 	}
 
@@ -97,7 +96,7 @@ func InitStatsd() error {
 		return err
 	}
 
-	Statsd.Client = c
+	Instance.Client = c
 	return nil
 
 }

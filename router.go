@@ -3,6 +3,7 @@ package tonic
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/lingmiaotech/tonic/statsd"
 	"strings"
 )
 
@@ -16,11 +17,11 @@ func (s *Server) InitRoutes() error {
 //RequestHandler handles each request and make some records
 func RequestHandler(c *gin.Context) {
 
-	timer := Statsd.NewTimer()
+	timer := statsd.NewTimer()
 
 	c.Next()
 
-	Statsd.Increment(getCountBucket(c))
+	statsd.Increment(getCountBucket(c))
 
 	timer.Send(getTimingBucket(c))
 

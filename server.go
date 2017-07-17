@@ -7,6 +7,7 @@ import (
 	"github.com/lingmiaotech/tonic/kafka"
 	"github.com/lingmiaotech/tonic/logging"
 	"github.com/lingmiaotech/tonic/sentry"
+	"github.com/lingmiaotech/tonic/statsd"
 )
 
 type Server struct {
@@ -33,7 +34,7 @@ func New() (server *Server, err error) {
 		return
 	}
 
-	err = InitStatsd()
+	err = statsd.InitStatsd()
 	if err != nil {
 		return
 	}
