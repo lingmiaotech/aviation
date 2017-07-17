@@ -1,4 +1,4 @@
-package tonic
+package logging
 
 import (
 	"errors"
@@ -15,36 +15,36 @@ type LogHandler struct {
 	GetHook   func(loggerName string) (logrus.Hook, error)
 }
 
-type LoggingClass struct {
+type InstanceClass struct {
 	AppName    string
 	Loggers    map[string]*logrus.Logger
 	Handler    map[string]*LogHandler
 	Formatters map[string]logrus.Formatter
 }
 
-func (logging LoggingClass) GetDefaultLogger() *logrus.Logger {
-	defaultLogger, _ := logging.Loggers["default"]
+var Instance InstanceClass
+
+func GetDefaultLogger() *logrus.Logger {
+	defaultLogger, _ := Instance.Loggers["default"]
 	return defaultLogger
 }
 
-func (logging LoggingClass) GetLogger(name string) *logrus.Logger {
-	logger, ok := logging.Loggers[name]
+func GetLogger(name string) *logrus.Logger {
+	logger, ok := Instance.Loggers[name]
 	if ok {
 		return logger
 	}
-	defaultLogger, _ := logging.Loggers["default"]
+	defaultLogger, _ := Instance.Loggers["default"]
 	return defaultLogger
 }
 
-var Logging LoggingClass
-
 func InitLogging() (err error) {
 
-	Logging.Loggers = make(map[string]*logrus.Logger)
-	Logging.Handler = make(map[string]*LogHandler)
-	Logging.Formatters = make(map[string]logrus.Formatter)
+	Instance.Loggers = make(map[string]*logrus.Logger)
+	Instance.Handler = make(map[string]*LogHandler)
+	Instance.Formatters = make(map[string]logrus.Formatter)
 
-	Logging.AppName = configs.GetString("app_name")
+	Instance.AppName = configs.GetString("app_name")
 
 	formatters, ok := configs.Get("logging.formatters").([]interface{})
 	if !ok {
@@ -77,7 +77,7 @@ func InitLogging() (err error) {
 			return err
 		}
 
-		Logging.Formatters[name] = f
+		Instance.Formatters[name] = f
 	}
 
 	handlers, ok := configs.Get("logging.handlers").([]interface{})
@@ -111,7 +111,7 @@ func InitLogging() (err error) {
 			return err
 		}
 
-		Logging.Handler[name] = h
+		Instance.Handler[name] = h
 	}
 
 	loggers, ok := configs.Get("logging.loggers").([]interface{})
@@ -145,10 +145,10 @@ func InitLogging() (err error) {
 			return err
 		}
 
-		Logging.Loggers[name] = l
+		Instance.Loggers[name] = l
 	}
 
-	_, ok = Logging.Loggers["default"]
+	_, ok = Instance.Loggers["default"]
 	if !ok {
 		return errors.New("tonic_error.logging.missing_default_logger")
 	}
@@ -179,7 +179,7 @@ func getFormatter(format string, color bool) (logrus.Formatter, error) {
 }
 
 func getHandler(name string, formatter string) (*LogHandler, error) {
-	f, ok := Logging.Formatters[formatter]
+	f, ok := Instance.Formatters[formatter]
 	if !ok {
 		return nil, errors.New("tonic_error.logging.invalid_formatter")
 	}
@@ -197,7 +197,7 @@ func getHandler(name string, formatter string) (*LogHandler, error) {
 			Name:      name,
 			Formatter: f,
 			GetHook: func(loggerName string) (logrus.Hook, error) {
-				topic := fmt.Sprintf("%s.%s", Logging.AppName, loggerName)
+				topic := fmt.Sprintf("%s.%s", Instance.AppName, loggerName)
 				kafkaHook, err := NewKafkaHook(topic, logrus.AllLevels, f)
 				if err != nil {
 					return nil, err
@@ -231,7 +231,7 @@ func getLogger(name string, level string, handlers []interface{}) (*logrus.Logge
 			return nil, fmt.Errorf("tonic_error.logging.invalid_handler_type.%s", handler)
 		}
 
-		loggerHandler, ok := Logging.Handler[handlerStr]
+		loggerHandler, ok := Instance.Handler[handlerStr]
 		if !ok {
 			return nil, fmt.Errorf("tonic_error.logging.invalid_handler.%s", handlerStr)
 		}

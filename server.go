@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/lingmiaotech/tonic/configs"
 	"github.com/lingmiaotech/tonic/kafka"
+	"github.com/lingmiaotech/tonic/logging"
 )
 
 type Server struct {
@@ -26,7 +27,7 @@ func New() (server *Server, err error) {
 		return
 	}
 
-	err = InitLogging()
+	err = logging.InitLogging()
 	if err != nil {
 		return
 	}
@@ -76,7 +77,7 @@ func (s *Server) Start() (err error) {
 func GetServerMode() string {
 	env, ok := configs.Get("env").(string)
 	if !ok {
-		Logging.GetDefaultLogger().Warn("Cannot find env setting in config, will use development mode.")
+		logging.GetDefaultLogger().Warn("Cannot find env setting in config, will use development mode.")
 	}
 	switch env {
 	case "production":

@@ -1,4 +1,4 @@
-package tonic
+package logging
 
 import (
 	"errors"
