@@ -3,6 +3,7 @@ package tonic
 import (
 	"fmt"
 	"github.com/getsentry/raven-go"
+	"github.com/lingmiaotech/tonic/configs"
 	"strings"
 )
 
@@ -23,8 +24,8 @@ func (i sentryExtra) Class() string { return "extra" }
 // InitSentry : Initialize sentry DSN while sentry config is enabled
 func InitSentry() (err error) {
 
-	Sentry.Enabled = Configs.GetBool("sentry.enabled")
-	Sentry.Dsn = Configs.GetString("sentry.dsn")
+	Sentry.Enabled = configs.GetBool("sentry.enabled")
+	Sentry.Dsn = configs.GetString("sentry.dsn")
 
 	if !Sentry.Enabled {
 		return nil

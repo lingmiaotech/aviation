@@ -3,6 +3,7 @@ package tonic
 import (
 	"errors"
 	"fmt"
+	"github.com/lingmiaotech/tonic/configs"
 	"github.com/sirupsen/logrus"
 	"io/ioutil"
 	"os"
@@ -43,9 +44,9 @@ func InitLogging() (err error) {
 	Logging.Handler = make(map[string]*LogHandler)
 	Logging.Formatters = make(map[string]logrus.Formatter)
 
-	Logging.AppName = Configs.GetString("app_name")
+	Logging.AppName = configs.GetString("app_name")
 
-	formatters, ok := Configs.Get("logging.formatters").([]interface{})
+	formatters, ok := configs.Get("logging.formatters").([]interface{})
 	if !ok {
 		return errors.New("tonic_error.logging.invalid_config_format.formatters")
 	}
@@ -79,7 +80,7 @@ func InitLogging() (err error) {
 		Logging.Formatters[name] = f
 	}
 
-	handlers, ok := Configs.Get("logging.handlers").([]interface{})
+	handlers, ok := configs.Get("logging.handlers").([]interface{})
 	if !ok {
 		return errors.New("tonic_error.logging.invalid_config_format.handlers")
 	}
@@ -113,7 +114,7 @@ func InitLogging() (err error) {
 		Logging.Handler[name] = h
 	}
 
-	loggers, ok := Configs.Get("logging.loggers").([]interface{})
+	loggers, ok := configs.Get("logging.loggers").([]interface{})
 	if !ok {
 		return errors.New("tonic_error.logging.invalid_config_format.loggers")
 	}

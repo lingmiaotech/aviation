@@ -1,4 +1,4 @@
-package tonic
+package configs
 
 import (
 	"bytes"
@@ -8,10 +8,6 @@ import (
 	"os"
 	"time"
 )
-
-type ConfigsClass struct{}
-
-var Configs ConfigsClass
 
 func InitConfigs() error {
 
@@ -41,46 +37,46 @@ func getAppEnv() string {
 	return appEnv
 }
 
-func (c ConfigsClass) Get(key string) interface{} {
+func Get(key string) interface{} {
 	return viper.Get(key)
 }
 
-func (c ConfigsClass) GetBool(key string) bool {
+func GetBool(key string) bool {
 	return viper.GetBool(key)
 }
 
-func (c ConfigsClass) GetFloat64(key string) float64 {
+func GetFloat64(key string) float64 {
 	return viper.GetFloat64(key)
 }
 
-func (c ConfigsClass) GetInt(key string) int {
+func GetInt(key string) int {
 	return viper.GetInt(key)
 }
 
-func (c ConfigsClass) GetString(key string) string {
+func GetString(key string) string {
 	return viper.GetString(key)
 }
 
-func (c ConfigsClass) GetStringMap(key string) map[string]interface{} {
+func GetStringMap(key string) map[string]interface{} {
 	return viper.GetStringMap(key)
 }
 
-func (c ConfigsClass) GetStringMapString(key string) map[string]string {
+func GetStringMapString(key string) map[string]string {
 	return viper.GetStringMapString(key)
 }
 
-func (c ConfigsClass) GetStringSlice(key string) []string {
+func GetStringSlice(key string) []string {
 	return viper.GetStringSlice(key)
 }
 
-func (c ConfigsClass) GetTime(key string) time.Time {
+func GetTime(key string) time.Time {
 	return viper.GetTime(key)
 }
 
-func (c ConfigsClass) GetDuration(key string) time.Duration {
+func GetDuration(key string) time.Duration {
 	return viper.GetDuration(key)
 }
 
-func (c ConfigsClass) IsSet(key string) bool {
+func IsSet(key string) bool {
 	return viper.IsSet(key)
 }

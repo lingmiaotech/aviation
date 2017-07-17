@@ -2,7 +2,6 @@ package tonic
 
 import (
 	"errors"
-	"fmt"
 	"github.com/Shopify/sarama"
 	"github.com/sirupsen/logrus"
 	"time"
@@ -40,22 +39,18 @@ func (hook *KafkaHook) Levels() []logrus.Level {
 
 func (hook *KafkaHook) Fire(entry *logrus.Entry) error {
 
-	go func(entry *logrus.Entry) {
+	b, err := hook.formatter.Format(entry)
+	if err != nil {
+		return err
+	}
 
-		b, err := hook.formatter.Format(entry)
-		if err != nil {
-			fmt.Println(err)
-		}
+	value := sarama.ByteEncoder(b)
+	message := &sarama.ProducerMessage{
+		Topic: hook.topic,
+		Value: value,
+	}
 
-		value := sarama.ByteEncoder(b)
-		message := &sarama.ProducerMessage{
-			Topic: hook.topic,
-			Value: value,
-		}
+	_, _, err = Kafka.SendMessageWithRetry(message, 3, 1*time.Second)
 
-		Kafka.SendMessageWithRetry(message, 3, 1*time.Second)
-
-	}(entry)
-
-	return nil
+	return err
 }

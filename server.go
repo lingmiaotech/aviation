@@ -3,6 +3,7 @@ package tonic
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/lingmiaotech/tonic/configs"
 )
 
 type Server struct {
@@ -12,7 +13,7 @@ type Server struct {
 
 func New() (server *Server, err error) {
 
-	err = InitConfigs()
+	err = configs.InitConfigs()
 	if err != nil {
 		return
 	}
@@ -72,7 +73,7 @@ func (s *Server) Start() (err error) {
 }
 
 func GetServerMode() string {
-	env, ok := Configs.Get("env").(string)
+	env, ok := configs.Get("env").(string)
 	if !ok {
 		Logging.GetDefaultLogger().Warn("Cannot find env setting in config, will use development mode.")
 	}

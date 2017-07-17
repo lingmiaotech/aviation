@@ -2,6 +2,7 @@ package tonic
 
 import (
 	"github.com/Shopify/sarama"
+	"github.com/lingmiaotech/tonic/configs"
 	"time"
 )
 
@@ -15,14 +16,14 @@ var Kafka KafkaClass
 
 func InitKafka() (err error) {
 
-	Kafka.AppName = Configs.GetString("app_name")
-	Kafka.Enabled = Configs.GetBool("kafka.enabled")
+	Kafka.AppName = configs.GetString("app_name")
+	Kafka.Enabled = configs.GetBool("kafka.enabled")
 
 	if !Kafka.Enabled {
 		return nil
 	}
 
-	brokers := Configs.GetStringSlice("kafka.brokers")
+	brokers := configs.GetStringSlice("kafka.brokers")
 
 	kafkaConfig := sarama.NewConfig()
 	kafkaConfig.Producer.RequiredAcks = sarama.WaitForLocal       // Only wait for the leader to ack

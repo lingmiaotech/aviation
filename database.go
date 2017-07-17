@@ -4,23 +4,24 @@ import (
 	"errors"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"github.com/lingmiaotech/tonic/configs"
 	"time"
 )
 
 var Database *gorm.DB
 
 func InitDatabase() (err error) {
-	isDatabaseSet := Configs.IsSet("database")
+	isDatabaseSet := configs.IsSet("database")
 	if !isDatabaseSet {
 		return nil
 	}
 
-	driver := Configs.GetString("database.driver")
+	driver := configs.GetString("database.driver")
 	if driver == "" {
 		return errors.New("tonic_error.database.empty_dbstring_config")
 	}
 
-	dbstring := Configs.GetString("database.dbstring")
+	dbstring := configs.GetString("database.dbstring")
 	if dbstring == "" {
 		return errors.New("tonic_error.database.empty_dbstring_config")
 	}
