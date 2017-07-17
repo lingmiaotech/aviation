@@ -20,3 +20,5 @@ import:
 - package: gopkg.in/alexcesaro/statsd.v2
   version: ~2.0.0
 - package: github.com/getsentry/raven-go
+- package: github.com/levigross/grequests
+  version: ~0.9
