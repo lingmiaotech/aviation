@@ -3,6 +3,7 @@ package statsd
 import (
 	"fmt"
 	"github.com/lingmiaotech/tonic/configs"
+	"github.com/lingmiaotech/tonic/logging"
 	"gopkg.in/alexcesaro/statsd.v2"
 	"os"
 	"time"
@@ -23,7 +24,7 @@ var Instance InstanceClass
 func Increment(bucket string) {
 	b := getBucket(bucket)
 	if !Instance.Enabled {
-		fmt.Println(fmt.Sprintf("[STATSD] key=%s count=1", b))
+		logging.GetDefaultLogger().Infof("[STATSD] key=%s count=1", b)
 		return
 	}
 	Instance.Client.Increment(b)
@@ -33,7 +34,7 @@ func Increment(bucket string) {
 func Timing(bucket string, delta int) {
 	b := getBucket(bucket)
 	if !Instance.Enabled {
-		fmt.Println(fmt.Sprintf("[STATSD] key=%s time_delta=%d(ms)", b, delta))
+		logging.GetDefaultLogger().Infof("[STATSD] key=%s time_delta=%d(ms)", b, delta)
 		return
 	}
 	Instance.Client.Timing(b, delta)
@@ -42,7 +43,7 @@ func Timing(bucket string, delta int) {
 func Count(bucket string, n int) {
 	b := getBucket(bucket)
 	if !Instance.Enabled {
-		fmt.Println(fmt.Sprintf("[STATSD] key=%v count=%d", b, n))
+		logging.GetDefaultLogger().Infof("[STATSD] key=%v count=%d", b, n)
 		return
 	}
 	Instance.Client.Count(b, n)
@@ -51,7 +52,7 @@ func Count(bucket string, n int) {
 func Gauge(bucket string, n int) {
 	b := getBucket(bucket)
 	if !Instance.Enabled {
-		fmt.Println(fmt.Sprintf("[STATSD] key=%v gauge=%d", b, n))
+		logging.GetDefaultLogger().Infof("[STATSD] key=%v gauge=%d", b, n)
 		return
 	}
 	Instance.Client.Gauge(b, n)

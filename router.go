@@ -1,6 +1,7 @@
 package tonic
 
 import (
+	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/lingmiaotech/tonic/statsd"
@@ -9,8 +10,11 @@ import (
 
 func (s *Server) InitRoutes() error {
 
-	s.App.Use(RequestHandler)
-
+	app, ok := (s.App).(*gin.Engine)
+	if !ok {
+		return errors.New("invalid_app_engine")
+	}
+	app.Use(RequestHandler)
 	return nil
 }
 

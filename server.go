@@ -1,8 +1,9 @@
 package tonic
 
 import (
+	"errors"
 	"fmt"
-	"github.com/CrowdSurge/banner.git"
+	"github.com/CrowdSurge/banner"
 	"github.com/gin-gonic/gin"
 	"github.com/lingmiaotech/tonic/configs"
 	"github.com/lingmiaotech/tonic/database"
@@ -11,10 +12,11 @@ import (
 	"github.com/lingmiaotech/tonic/redis"
 	"github.com/lingmiaotech/tonic/sentry"
 	"github.com/lingmiaotech/tonic/statsd"
+	"io/ioutil"
 )
 
 type Server struct {
-	App  *gin.Engine
+	App  interface{}
 	Port int
 }
 
@@ -61,9 +63,10 @@ func New() (*Server, error) {
 	}
 
 	server = &Server{
-		App:  gin.Default(),
+		App:  gin.New(),
 		Port: 8080,
 	}
+	InitMiddlewares(server.App.(*gin.Engine))
 
 	err = server.InitRoutes()
 	if err != nil {
@@ -78,9 +81,14 @@ func (s *Server) SetPort(p int) {
 }
 
 func (s *Server) Start() error {
-	banner.Print("CHEERS!")
+	banner.Print("cheers")
 
-	err := s.App.Run(fmt.Sprintf(":%d", s.Port))
+	app, ok := (s.App).(*gin.Engine)
+	if !ok {
+		return errors.New("invalid_app_engine")
+	}
+
+	err := app.Run(fmt.Sprintf(":%d", s.Port))
 	if err != nil {
 		return err
 	}
@@ -100,4 +108,15 @@ func GetServerMode() string {
 		return gin.TestMode
 	}
 	return gin.DebugMode
+}
+
+func InitMiddlewares(app *gin.Engine) {
+	env, _ := configs.Get("env").(string)
+
+	switch env {
+	case "test":
+		app.Use(gin.LoggerWithWriter(ioutil.Discard), gin.Recovery())
+	default:
+		app.Use(gin.Logger(), gin.Recovery())
+	}
 }

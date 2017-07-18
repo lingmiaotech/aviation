@@ -1,5 +1,5 @@
 hash: 2e6042d9e731b07ef8a53fd740d51eb6e6dee40d513f202f277c2631bd25fb70
-updated: 2017-07-17T18:06:33.316279169+08:00
+updated: 2017-07-17T19:16:49.149874773+08:00
 imports:
 - name: github.com/certifi/gocertifi
   version: a9c833d2837d3b16888d55d5aafa9ffe9afb22b0
@@ -7,8 +7,6 @@ imports:
   version: 8c0e79dc5ff70fb2919f0d662f44fd72ccdf9be2
   subpackages:
   - fonts
-- name: github.com/CrowdSurge/banner.git
-  version: 8c0e79dc5ff70fb2919f0d662f44fd72ccdf9be2
 - name: github.com/davecgh/go-spew
   version: 5215b55f46b2b919f50a1df0eaa5886afe4e3b3d
   subpackages:
