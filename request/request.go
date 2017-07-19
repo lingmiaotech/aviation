@@ -16,19 +16,22 @@ type Response struct {
 	RawResponse *http.Response
 }
 
-func Get(url string, opts *Opts) (*Response, error) {
+type Sender interface {
+	Get(url string, opts *Opts) (*Response, error)
+	Put(url string, opts *Opts) (*Response, error)
+	Patch(url string, opts *Opts) (*Response, error)
+	Delete(url string, opts *Opts) (*Response, error)
+	Post(url string, opts *Opts) (*Response, error)
+	Head(url string, opts *Opts) (*Response, error)
+	Options(url string, opts *Opts) (*Response, error)
+}
+
+type DefaultSender struct{}
+
+var S DefaultSender
+
+func (s DefaultSender) Get(url string, opts *Opts) (*Response, error) {
 	opts.fixJsonRequestEscapeIssue()
-
-	shouldMock, mresponse := checkMock(url, "GET", opts)
-	if shouldMock {
-		return &Response{
-			StatusCode:  mresponse.StatusCode,
-			Header:      mresponse.Header,
-			Body:        mresponse.Body,
-			RawResponse: nil,
-		}, nil
-	}
-
 	response, err := grequests.Get(url, (*grequests.RequestOptions)(opts))
 	return &Response{
 		StatusCode:  response.StatusCode,
@@ -38,19 +41,8 @@ func Get(url string, opts *Opts) (*Response, error) {
 	}, err
 }
 
-func Put(url string, opts *Opts) (*Response, error) {
+func (s DefaultSender) Put(url string, opts *Opts) (*Response, error) {
 	opts.fixJsonRequestEscapeIssue()
-
-	shouldMock, mresponse := checkMock(url, "PUT", opts)
-	if shouldMock {
-		return &Response{
-			StatusCode:  mresponse.StatusCode,
-			Header:      mresponse.Header,
-			Body:        mresponse.Body,
-			RawResponse: nil,
-		}, nil
-	}
-
 	response, err := grequests.Put(url, (*grequests.RequestOptions)(opts))
 	return &Response{
 		StatusCode:  response.StatusCode,
@@ -60,19 +52,8 @@ func Put(url string, opts *Opts) (*Response, error) {
 	}, err
 }
 
-func Patch(url string, opts *Opts) (*Response, error) {
+func (s DefaultSender) Patch(url string, opts *Opts) (*Response, error) {
 	opts.fixJsonRequestEscapeIssue()
-
-	shouldMock, mresponse := checkMock(url, "PATCH", opts)
-	if shouldMock {
-		return &Response{
-			StatusCode:  mresponse.StatusCode,
-			Header:      mresponse.Header,
-			Body:        mresponse.Body,
-			RawResponse: nil,
-		}, nil
-	}
-
 	response, err := grequests.Patch(url, (*grequests.RequestOptions)(opts))
 	return &Response{
 		StatusCode:  response.StatusCode,
@@ -82,19 +63,8 @@ func Patch(url string, opts *Opts) (*Response, error) {
 	}, err
 }
 
-func Delete(url string, opts *Opts) (*Response, error) {
+func (s DefaultSender) Delete(url string, opts *Opts) (*Response, error) {
 	opts.fixJsonRequestEscapeIssue()
-
-	shouldMock, mresponse := checkMock(url, "DELETE", opts)
-	if shouldMock {
-		return &Response{
-			StatusCode:  mresponse.StatusCode,
-			Header:      mresponse.Header,
-			Body:        mresponse.Body,
-			RawResponse: nil,
-		}, nil
-	}
-
 	response, err := grequests.Delete(url, (*grequests.RequestOptions)(opts))
 	return &Response{
 		StatusCode:  response.StatusCode,
@@ -104,19 +74,8 @@ func Delete(url string, opts *Opts) (*Response, error) {
 	}, err
 }
 
-func Post(url string, opts *Opts) (*Response, error) {
+func (s DefaultSender) Post(url string, opts *Opts) (*Response, error) {
 	opts.fixJsonRequestEscapeIssue()
-
-	shouldMock, mresponse := checkMock(url, "POST", opts)
-	if shouldMock {
-		return &Response{
-			StatusCode:  mresponse.StatusCode,
-			Header:      mresponse.Header,
-			Body:        mresponse.Body,
-			RawResponse: nil,
-		}, nil
-	}
-
 	response, err := grequests.Post(url, (*grequests.RequestOptions)(opts))
 	return &Response{
 		StatusCode:  response.StatusCode,
@@ -126,19 +85,8 @@ func Post(url string, opts *Opts) (*Response, error) {
 	}, err
 }
 
-func Head(url string, opts *Opts) (*Response, error) {
+func (s DefaultSender) Head(url string, opts *Opts) (*Response, error) {
 	opts.fixJsonRequestEscapeIssue()
-
-	shouldMock, mresponse := checkMock(url, "HEAD", opts)
-	if shouldMock {
-		return &Response{
-			StatusCode:  mresponse.StatusCode,
-			Header:      mresponse.Header,
-			Body:        mresponse.Body,
-			RawResponse: nil,
-		}, nil
-	}
-
 	response, err := grequests.Head(url, (*grequests.RequestOptions)(opts))
 	return &Response{
 		StatusCode:  response.StatusCode,
@@ -148,19 +96,8 @@ func Head(url string, opts *Opts) (*Response, error) {
 	}, err
 }
 
-func Options(url string, opts *Opts) (*Response, error) {
+func (s DefaultSender) Options(url string, opts *Opts) (*Response, error) {
 	opts.fixJsonRequestEscapeIssue()
-
-	shouldMock, mresponse := checkMock(url, "OPTIONS", opts)
-	if shouldMock {
-		return &Response{
-			StatusCode:  mresponse.StatusCode,
-			Header:      mresponse.Header,
-			Body:        mresponse.Body,
-			RawResponse: nil,
-		}, nil
-	}
-
 	response, err := grequests.Options(url, (*grequests.RequestOptions)(opts))
 	return &Response{
 		StatusCode:  response.StatusCode,
@@ -171,32 +108,25 @@ func Options(url string, opts *Opts) (*Response, error) {
 }
 
 func (r *Response) JSON(userStruct interface{}) error {
-
 	err := json.Unmarshal(r.Body, &userStruct)
 	if err != nil {
 		return err
 	}
-
 	return nil
 
 }
 
 func (r *Response) String() string {
-
 	return string(r.Body)
-
 }
 
 func (opts *Opts) fixJsonRequestEscapeIssue() error {
-
 	switch v := opts.JSON.(type) {
-
 	case string:
 		opts.JSON = []byte(v)
-
+		return nil
 	case []byte:
 		return nil
-
 	default:
 		buffer := bytes.Buffer{}
 		encoder := json.NewEncoder(&buffer)
@@ -206,7 +136,6 @@ func (opts *Opts) fixJsonRequestEscapeIssue() error {
 			return err
 		}
 		opts.JSON = buffer.Bytes()
+		return nil
 	}
-	return nil
-
 }

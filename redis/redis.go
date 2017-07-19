@@ -11,7 +11,7 @@ var Client *redis.Client
 func InitRedis() (err error) {
 
 	enabled := configs.GetBool("redis.enabled")
-	if enabled {
+	if !enabled {
 		return nil
 	}
 
