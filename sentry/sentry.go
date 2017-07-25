@@ -20,6 +20,7 @@ type DefaultSender struct {
 }
 
 var S Sender
+var DS *DefaultSender
 
 type Extra struct {
 	Data interface{} `json:"data"`
@@ -30,16 +31,17 @@ func (i Extra) Class() string { return "extra" }
 // InitSentry : Initialize sentry DSN while sentry config is enabled
 func InitSentry() (err error) {
 
-	S = DefaultSender{}
+	DS = new(DefaultSender)
+	S = DS
 
-	S.(DefaultSender).Enabled = configs.GetBool("sentry.enabled")
-	S.(DefaultSender).Dsn = configs.GetString("sentry.dsn")
+	DS.Enabled = configs.GetBool("sentry.enabled")
+	DS.Dsn = configs.GetString("sentry.dsn")
 
-	if !S.(DefaultSender).Enabled {
+	if !DS.Enabled {
 		return nil
 	}
 
-	S.(DefaultSender).Client, err = raven.New(S.(DefaultSender).Dsn)
+	DS.Client, err = raven.New(DS.Dsn)
 	if err != nil {
 		return
 	}
@@ -47,7 +49,7 @@ func InitSentry() (err error) {
 	return
 }
 
-func (s DefaultSender) CaptureError(err error, params map[string]interface{}) {
+func (s *DefaultSender) CaptureError(err error, params map[string]interface{}) {
 	if !s.Enabled {
 		logging.GetDefaultLogger().Infof("[SENTRY] error=%s , params=%v\n", err, printParams(params))
 		return
@@ -55,7 +57,7 @@ func (s DefaultSender) CaptureError(err error, params map[string]interface{}) {
 	s.Client.CaptureError(err, nil, Extra{params})
 }
 
-func (s DefaultSender) CaptureMessage(msg string, params map[string]interface{}) {
+func (s *DefaultSender) CaptureMessage(msg string, params map[string]interface{}) {
 	if !s.Enabled {
 		logging.GetDefaultLogger().Infof("[SENTRY] error=%s, params=%v\n", msg, printParams(params))
 		return

@@ -28,9 +28,10 @@ type Sender interface {
 
 type DefaultSender struct{}
 
-var S DefaultSender
+var DS *DefaultSender = new(DefaultSender)
+var S Sender = DS
 
-func (s DefaultSender) Get(url string, opts *Opts) (*Response, error) {
+func (s *DefaultSender) Get(url string, opts *Opts) (*Response, error) {
 	opts.fixJsonRequestEscapeIssue()
 	response, err := grequests.Get(url, (*grequests.RequestOptions)(opts))
 	return &Response{
@@ -41,7 +42,7 @@ func (s DefaultSender) Get(url string, opts *Opts) (*Response, error) {
 	}, err
 }
 
-func (s DefaultSender) Put(url string, opts *Opts) (*Response, error) {
+func (s *DefaultSender) Put(url string, opts *Opts) (*Response, error) {
 	opts.fixJsonRequestEscapeIssue()
 	response, err := grequests.Put(url, (*grequests.RequestOptions)(opts))
 	return &Response{
@@ -52,7 +53,7 @@ func (s DefaultSender) Put(url string, opts *Opts) (*Response, error) {
 	}, err
 }
 
-func (s DefaultSender) Patch(url string, opts *Opts) (*Response, error) {
+func (s *DefaultSender) Patch(url string, opts *Opts) (*Response, error) {
 	opts.fixJsonRequestEscapeIssue()
 	response, err := grequests.Patch(url, (*grequests.RequestOptions)(opts))
 	return &Response{
@@ -63,7 +64,7 @@ func (s DefaultSender) Patch(url string, opts *Opts) (*Response, error) {
 	}, err
 }
 
-func (s DefaultSender) Delete(url string, opts *Opts) (*Response, error) {
+func (s *DefaultSender) Delete(url string, opts *Opts) (*Response, error) {
 	opts.fixJsonRequestEscapeIssue()
 	response, err := grequests.Delete(url, (*grequests.RequestOptions)(opts))
 	return &Response{
@@ -74,7 +75,7 @@ func (s DefaultSender) Delete(url string, opts *Opts) (*Response, error) {
 	}, err
 }
 
-func (s DefaultSender) Post(url string, opts *Opts) (*Response, error) {
+func (s *DefaultSender) Post(url string, opts *Opts) (*Response, error) {
 	opts.fixJsonRequestEscapeIssue()
 	response, err := grequests.Post(url, (*grequests.RequestOptions)(opts))
 	return &Response{
@@ -85,7 +86,7 @@ func (s DefaultSender) Post(url string, opts *Opts) (*Response, error) {
 	}, err
 }
 
-func (s DefaultSender) Head(url string, opts *Opts) (*Response, error) {
+func (s *DefaultSender) Head(url string, opts *Opts) (*Response, error) {
 	opts.fixJsonRequestEscapeIssue()
 	response, err := grequests.Head(url, (*grequests.RequestOptions)(opts))
 	return &Response{
@@ -96,7 +97,7 @@ func (s DefaultSender) Head(url string, opts *Opts) (*Response, error) {
 	}, err
 }
 
-func (s DefaultSender) Options(url string, opts *Opts) (*Response, error) {
+func (s *DefaultSender) Options(url string, opts *Opts) (*Response, error) {
 	opts.fixJsonRequestEscapeIssue()
 	response, err := grequests.Options(url, (*grequests.RequestOptions)(opts))
 	return &Response{
@@ -138,4 +139,32 @@ func (opts *Opts) fixJsonRequestEscapeIssue() error {
 		opts.JSON = buffer.Bytes()
 		return nil
 	}
+}
+
+func Get(url string, opts *Opts) (*Response, error) {
+	return S.Get(url, opts)
+}
+
+func Put(url string, opts *Opts) (*Response, error) {
+	return S.Put(url, opts)
+}
+
+func Patch(url string, opts *Opts) (*Response, error) {
+	return S.Patch(url, opts)
+}
+
+func Delete(url string, opts *Opts) (*Response, error) {
+	return S.Delete(url, opts)
+}
+
+func Post(url string, opts *Opts) (*Response, error) {
+	return S.Post(url, opts)
+}
+
+func Head(url string, opts *Opts) (*Response, error) {
+	return S.Head(url, opts)
+}
+
+func Options(url string, opts *Opts) (*Response, error) {
+	return S.Options(url, opts)
 }
