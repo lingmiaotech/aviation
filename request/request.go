@@ -122,6 +122,9 @@ func (r *Response) String() string {
 }
 
 func (opts *Opts) fixJsonRequestEscapeIssue() error {
+	if opts.JSON == nil {
+		return nil
+	}
 	switch v := opts.JSON.(type) {
 	case string:
 		opts.JSON = []byte(v)
