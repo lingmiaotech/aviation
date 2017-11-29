@@ -16,7 +16,7 @@ import:
 - package: github.com/Shopify/sarama
   version: ~1.12.0
 - package: github.com/go-redis/redis
-  version: ~6.4.1
+  version: ~6.7.4
 - package: gopkg.in/alexcesaro/statsd.v2
   version: ~2.0.0
 - package: github.com/getsentry/raven-go

@@ -1,5 +1,5 @@
-hash: 2e6042d9e731b07ef8a53fd740d51eb6e6dee40d513f202f277c2631bd25fb70
-updated: 2017-07-17T19:16:49.149874773+08:00
+hash: c96e9cbed8dc98b3004ef69795d8557ee5e1bea51c4732b124fbe9d6f87de3a7
+updated: 2017-11-29T21:26:03.604924766+08:00
 imports:
 - name: github.com/certifi/gocertifi
   version: a9c833d2837d3b16888d55d5aafa9ffe9afb22b0
@@ -31,7 +31,7 @@ imports:
   - binding
   - render
 - name: github.com/go-redis/redis
-  version: 167410bcd747d34243efbf53332a7c00b6bd9377
+  version: e5e021257bfc6d5fbf0beac33e30194311fb189f
   subpackages:
   - internal
   - internal/consistenthash
@@ -109,10 +109,6 @@ imports:
   version: 5efa3251c7f7d05e5d9704a69a984ec9f1386a40
   subpackages:
   - codec
-- name: go4.org
-  version: 034d17a462f7b2dcd1a4a73553ec5357ff6e6c6e
-  subpackages:
-  - syncutil
 - name: golang.org/x/net
   version: f315505cf3349909cdf013ea56690da34e96a451
   subpackages:
