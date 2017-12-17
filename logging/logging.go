@@ -197,12 +197,19 @@ func getHandler(name string, formatter string) (*LogHandler, error) {
 			Name:      name,
 			Formatter: f,
 			GetHook: func(loggerName string) (logrus.Hook, error) {
-				topic := fmt.Sprintf("%s.%s", Instance.AppName, loggerName)
+
+				divider, ok := configs.Get("logging.kafka_topic_divider").(string)
+				if !ok {
+					divider = "."
+				}
+
+				topic := fmt.Sprintf("%s%s%s", Instance.AppName, divider, loggerName)
 				kafkaHook, err := NewKafkaHook(topic, logrus.AllLevels, f)
 				if err != nil {
 					return nil, err
 				}
 				return kafkaHook, nil
+
 			},
 		}, nil
 	}
