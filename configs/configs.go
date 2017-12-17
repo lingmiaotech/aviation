@@ -3,10 +3,12 @@ package configs
 import (
 	"bytes"
 	"errors"
-	"github.com/spf13/viper"
 	"io/ioutil"
 	"os"
+	"strings"
 	"time"
+
+	"github.com/spf13/viper"
 )
 
 func InitConfigs() error {
@@ -55,6 +57,26 @@ func GetInt(key string) int {
 
 func GetString(key string) string {
 	return viper.GetString(key)
+}
+
+// Get a possibly dynamic string from key
+// - If the value in configs file starts with @, use the rest of it as the key to fetch from env
+// - If it starts with <, use the rest of it as path to get from file system
+// - Other cases it works like GetString
+func GetDynamicString(key string) string {
+	value := viper.GetString(key)
+	if strings.HasPrefix(value, "@") {
+		value = os.Getenv(value[1:])
+		return value
+	}
+	if strings.HasPrefix(value, "<") {
+		b, err := ioutil.ReadFile(strings.Trim(value[1:], " "))
+		if err != nil {
+			return ""
+		}
+		return string(b)
+	}
+	return value
 }
 
 func GetStringMap(key string) map[string]interface{} {

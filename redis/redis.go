@@ -18,10 +18,11 @@ func InitRedis() (err error) {
 	host := configs.GetString("redis.host")
 	port := configs.GetInt("redis.port")
 	db := configs.GetInt("redis.db")
+	password := configs.GetDynamicString("redis.password")
 
 	Client = redis.NewClient(&redis.Options{
 		Addr:       fmt.Sprintf("%s:%d", host, port),
-		Password:   "",
+		Password:   password,
 		DB:         db,
 		MaxRetries: 3,
 	})
