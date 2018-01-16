@@ -2,10 +2,11 @@ package sentry
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/getsentry/raven-go"
 	"github.com/lingmiaotech/tonic/configs"
 	"github.com/lingmiaotech/tonic/logging"
-	"strings"
 )
 
 type Sender interface {
@@ -51,7 +52,7 @@ func InitSentry() (err error) {
 
 func (s *DefaultSender) CaptureError(err error, params map[string]interface{}) {
 	if !s.Enabled {
-		logging.GetDefaultLogger().Infof("[SENTRY] error=%s , params=%v\n", err, printParams(params))
+		logging.GetDefaultLogger().Errorf("[SENTRY] error=%s , params=%v\n", err, printParams(params))
 		return
 	}
 	s.Client.CaptureError(err, nil, Extra{params})
@@ -59,7 +60,7 @@ func (s *DefaultSender) CaptureError(err error, params map[string]interface{}) {
 
 func (s *DefaultSender) CaptureMessage(msg string, params map[string]interface{}) {
 	if !s.Enabled {
-		logging.GetDefaultLogger().Infof("[SENTRY] error=%s, params=%v\n", msg, printParams(params))
+		logging.GetDefaultLogger().Errorf("[SENTRY] error=%s, params=%v\n", msg, printParams(params))
 		return
 	}
 	s.Client.CaptureMessage(msg, nil, Extra{params})
