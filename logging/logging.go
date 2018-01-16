@@ -3,10 +3,11 @@ package logging
 import (
 	"errors"
 	"fmt"
-	"github.com/lingmiaotech/tonic/configs"
-	"github.com/sirupsen/logrus"
 	"io/ioutil"
 	"os"
+
+	"github.com/lingmiaotech/tonic/configs"
+	"github.com/sirupsen/logrus"
 )
 
 type LogHandler struct {
@@ -106,7 +107,7 @@ func InitLogging() (err error) {
 			return errors.New("tonic_error.logging.invalid_config_format.handlers.formatter")
 		}
 
-		h, err := getHandler(handle, formatter)
+		h, err := getHandler(handle, formatter, handlerMap)
 		if err != nil {
 			return err
 		}
@@ -178,7 +179,7 @@ func getFormatter(format string, color bool) (logrus.Formatter, error) {
 	return nil, errors.New("tonic_error.logging.unsupported_formatter")
 }
 
-func getHandler(name string, formatter string) (*LogHandler, error) {
+func getHandler(name string, formatter string, handlerConfig map[interface{}]interface{}) (*LogHandler, error) {
 	f, ok := Instance.Formatters[formatter]
 	if !ok {
 		return nil, errors.New("tonic_error.logging.invalid_formatter")
@@ -198,7 +199,7 @@ func getHandler(name string, formatter string) (*LogHandler, error) {
 			Formatter: f,
 			GetHook: func(loggerName string) (logrus.Hook, error) {
 
-				divider, ok := configs.Get("logging.kafka_topic_divider").(string)
+				divider, ok := handlerConfig["topic_divider"].(string)
 				if !ok {
 					divider = "."
 				}
