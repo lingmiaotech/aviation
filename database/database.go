@@ -2,10 +2,12 @@ package database
 
 import (
 	"errors"
+	"fmt"
+	"time"
+
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/lingmiaotech/tonic/configs"
-	"time"
 )
 
 var Engine *gorm.DB
@@ -21,11 +23,14 @@ func InitDatabase() (err error) {
 		return errors.New("tonic_error.database.empty_dbstring_config")
 	}
 
-	dbstring := configs.GetString("database.dbstring")
-	if dbstring == "" {
-		return errors.New("tonic_error.database.empty_dbstring_config")
-	}
+	appName := configs.GetString("app_name")
+	username := configs.GetString("database.username")
+	password := configs.GetDynamicString("database.password")
+	host := configs.GetString("database.host")
+	port := configs.GetString("database.port")
+	args := configs.GetString("database.args")
 
+	dbstring := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?%s", username, password, host, port, appName, args)
 	Engine, err = gorm.Open(driver, dbstring)
 	if err != nil {
 		return
