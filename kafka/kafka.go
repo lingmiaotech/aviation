@@ -27,7 +27,7 @@ func InitKafka() (err error) {
 
 	configs := sarama.NewConfig()
 	configs.Producer.RequiredAcks = sarama.WaitForLocal       // Only wait for the leader to ack
-	configs.Producer.Compression = sarama.CompressionSnappy   // Compress messages
+	configs.Producer.Compression = sarama.CompressionNone     // Compress messages
 	configs.Producer.Flush.Frequency = 500 * time.Millisecond // Flush batches every 500ms
 	configs.Producer.Retry.Max = 3
 	configs.Producer.Return.Errors = true
