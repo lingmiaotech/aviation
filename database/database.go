@@ -24,13 +24,18 @@ func InitDatabase() (err error) {
 	}
 
 	appName := configs.GetString("app_name")
+	dbName := appName
+	databaseName := configs.GetString("database.database")
+	if databaseName != "" {
+		dbName = databaseName
+	}
 	username := configs.GetString("database.username")
 	password := configs.GetDynamicString("database.password")
 	host := configs.GetString("database.host")
 	port := configs.GetString("database.port")
 	args := configs.GetString("database.args")
 
-	dbstring := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?%s", username, password, host, port, appName, args)
+	dbstring := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?%s", username, password, host, port, dbName, args)
 	Engine, err = gorm.Open(driver, dbstring)
 	if err != nil {
 		return
