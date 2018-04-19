@@ -3,6 +3,8 @@ package tonic
 import (
 	"errors"
 	"fmt"
+	"io/ioutil"
+
 	"github.com/CrowdSurge/banner"
 	"github.com/gin-gonic/gin"
 	"github.com/lingmiaotech/tonic/configs"
@@ -12,7 +14,6 @@ import (
 	"github.com/lingmiaotech/tonic/redis"
 	"github.com/lingmiaotech/tonic/sentry"
 	"github.com/lingmiaotech/tonic/statsd"
-	"io/ioutil"
 )
 
 type Server struct {

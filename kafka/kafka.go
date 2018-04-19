@@ -1,9 +1,10 @@
 package kafka
 
 import (
+	"time"
+
 	"github.com/Shopify/sarama"
 	"github.com/lingmiaotech/tonic/configs"
-	"time"
 )
 
 type Class struct {
@@ -25,15 +26,15 @@ func InitKafka() (err error) {
 
 	brokers := configs.GetStringSlice("kafka.brokers")
 
-	configs := sarama.NewConfig()
-	configs.Producer.RequiredAcks = sarama.WaitForLocal       // Only wait for the leader to ack
-	configs.Producer.Compression = sarama.CompressionNone     // Compress messages
-	configs.Producer.Flush.Frequency = 500 * time.Millisecond // Flush batches every 500ms
-	configs.Producer.Retry.Max = 3
-	configs.Producer.Return.Errors = true
-	configs.Producer.Return.Successes = true
+	cfg := sarama.NewConfig()
+	cfg.Producer.RequiredAcks = sarama.WaitForLocal       // Only wait for the leader to ack
+	cfg.Producer.Compression = sarama.CompressionNone     // Compress messages
+	cfg.Producer.Flush.Frequency = 500 * time.Millisecond // Flush batches every 500ms
+	cfg.Producer.Retry.Max = 3
+	cfg.Producer.Return.Errors = true
+	cfg.Producer.Return.Successes = true
 
-	producer, err := sarama.NewSyncProducer(brokers, configs)
+	producer, err := sarama.NewSyncProducer(brokers, cfg)
 	if err != nil {
 		return err
 	}

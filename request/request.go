@@ -3,8 +3,9 @@ package request
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/levigross/grequests"
 	"net/http"
+
+	"github.com/levigross/grequests"
 )
 
 type Opts grequests.RequestOptions

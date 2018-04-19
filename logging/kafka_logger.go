@@ -2,10 +2,11 @@ package logging
 
 import (
 	"errors"
+	"time"
+
 	"github.com/Shopify/sarama"
 	"github.com/lingmiaotech/tonic/kafka"
 	"github.com/sirupsen/logrus"
-	"time"
 )
 
 type KafkaHook struct {

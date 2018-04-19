@@ -2,11 +2,11 @@ package statsd
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/lingmiaotech/tonic/configs"
 	"github.com/lingmiaotech/tonic/logging"
 	"gopkg.in/alexcesaro/statsd.v2"
-	"os"
-	"time"
 )
 
 type InstanceClass struct {
@@ -59,15 +59,15 @@ func Gauge(bucket string, n int) {
 }
 
 func getBucket(bucket string) string {
-	hostName, err := os.Hostname()
-	if err != nil {
-		hostName = "UNKNOWNHOST"
-	}
-	return fmt.Sprintf("%v.%v.%v", hostName, Instance.AppName, bucket)
+	return fmt.Sprintf("%v.%v", Instance.AppName, bucket)
 }
 
 func NewTimer() Timer {
 	return Timer{start: time.Now()}
+}
+
+func NewCustomTimer(t time.Time) Timer {
+	return Timer{start: t}
 }
 
 // Send sends the time elapsed since the creation of the Timing.
