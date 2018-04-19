@@ -7,6 +7,7 @@ import (
 
 	"github.com/CrowdSurge/banner"
 	"github.com/gin-gonic/gin"
+
 	"github.com/lingmiaotech/tonic/configs"
 	"github.com/lingmiaotech/tonic/database"
 	"github.com/lingmiaotech/tonic/kafka"

@@ -3,9 +3,10 @@ package tonic
 import (
 	"errors"
 	"fmt"
+	"strings"
+
 	"github.com/gin-gonic/gin"
 	"github.com/lingmiaotech/tonic/statsd"
-	"strings"
 )
 
 func (s *Server) InitRoutes() error {
