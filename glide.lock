@@ -1,5 +1,5 @@
-hash: c96e9cbed8dc98b3004ef69795d8557ee5e1bea51c4732b124fbe9d6f87de3a7
-updated: 2017-11-29T21:26:03.604924766+08:00
+hash: 2b902abfb1e2261cda4f8dd142d472c7e762673c0a0a19dce71a80940ddb6eeb
+updated: 2018-10-10T15:26:32.122125062+08:00
 imports:
 - name: github.com/certifi/gocertifi
   version: a9c833d2837d3b16888d55d5aafa9ffe9afb22b0
@@ -31,7 +31,7 @@ imports:
   - binding
   - render
 - name: github.com/go-redis/redis
-  version: e5e021257bfc6d5fbf0beac33e30194311fb189f
+  version: 9c885d5ba8a22f260badcffde1649915fbeebfc0
   subpackages:
   - internal
   - internal/consistenthash
@@ -75,6 +75,8 @@ imports:
   version: fc9e8d8ef48496124e79ae0df75490096eccf6fe
 - name: github.com/mitchellh/mapstructure
   version: d0303fe809921458f417bcf828397a65db30a7e4
+- name: github.com/opentracing/opentracing-go
+  version: 1949ddbfd147afd4d964a9f00b24eb291e0e7c38
 - name: github.com/pelletier/go-buffruneio
   version: c37440a7cf42ac63b919c752ca73a85067e05992
 - name: github.com/pelletier/go-toml
@@ -105,6 +107,8 @@ imports:
   version: e57e3eeb33f795204c1ca35f56c44f83227c6e66
 - name: github.com/spf13/viper
   version: a1ecfa6a20bd4ef9e9caded262ee1b1b26847675
+- name: github.com/uber/jaeger-client-go
+  version: b043381d944715b469fd6b37addfd30145ca1758
 - name: github.com/ugorji/go
   version: 5efa3251c7f7d05e5d9704a69a984ec9f1386a40
   subpackages:

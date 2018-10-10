@@ -10,6 +10,7 @@ import (
 
 	"github.com/lingmiaotech/tonic/configs"
 	"github.com/lingmiaotech/tonic/database"
+	"github.com/lingmiaotech/tonic/jaeger"
 	"github.com/lingmiaotech/tonic/kafka"
 	"github.com/lingmiaotech/tonic/logging"
 	"github.com/lingmiaotech/tonic/redis"
@@ -112,6 +113,13 @@ func GetServerMode() string {
 	return gin.DebugMode
 }
 
+func JaegerInit() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		jaeger.InitJaeger()
+		c.Next()
+	}
+}
+
 func InitMiddlewares(app *gin.Engine) {
 	env, _ := configs.Get("env").(string)
 
@@ -119,6 +127,6 @@ func InitMiddlewares(app *gin.Engine) {
 	case "test":
 		app.Use(gin.LoggerWithWriter(ioutil.Discard), gin.Recovery())
 	default:
-		app.Use(gin.Logger(), gin.Recovery())
+		app.Use(gin.Logger(), gin.Recovery(), JaegerInit())
 	}
 }
