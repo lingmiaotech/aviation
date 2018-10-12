@@ -1,8 +1,10 @@
-hash: 2b902abfb1e2261cda4f8dd142d472c7e762673c0a0a19dce71a80940ddb6eeb
-updated: 2018-10-10T15:26:32.122125062+08:00
+hash: bf8c1fed09446812343d25f685b2a2653fa2e1e601e9f38fc8d613f7e5e71a4d
+updated: 2018-10-10T17:36:15.329199227+08:00
 imports:
 - name: github.com/certifi/gocertifi
   version: a9c833d2837d3b16888d55d5aafa9ffe9afb22b0
+- name: github.com/codahale/hdrhistogram
+  version: 3a0bb77429bd3a61596f5e8a3172445844342120
 - name: github.com/CrowdSurge/banner
   version: 8c0e79dc5ff70fb2919f0d662f44fd72ccdf9be2
   subpackages:
@@ -77,6 +79,9 @@ imports:
   version: d0303fe809921458f417bcf828397a65db30a7e4
 - name: github.com/opentracing/opentracing-go
   version: 1949ddbfd147afd4d964a9f00b24eb291e0e7c38
+  subpackages:
+  - ext
+  - log
 - name: github.com/pelletier/go-buffruneio
   version: c37440a7cf42ac63b919c752ca73a85067e05992
 - name: github.com/pelletier/go-toml
@@ -87,6 +92,8 @@ imports:
   version: 5a004441f897722c627870a981d02b29924215fa
   subpackages:
   - xxHash32
+- name: github.com/pkg/errors
+  version: 645ef00459ed84a119197bfb8d8205042c6df63d
 - name: github.com/pressly/goose
   version: f9980cee258976cd89b5edeaee57983104b9180f
 - name: github.com/rcrowley/go-metrics
@@ -109,6 +116,27 @@ imports:
   version: a1ecfa6a20bd4ef9e9caded262ee1b1b26847675
 - name: github.com/uber/jaeger-client-go
   version: b043381d944715b469fd6b37addfd30145ca1758
+  subpackages:
+  - config
+  - internal/baggage
+  - internal/baggage/remote
+  - internal/spanlog
+  - internal/throttler
+  - internal/throttler/remote
+  - log
+  - rpcmetrics
+  - thrift
+  - thrift-gen/agent
+  - thrift-gen/baggage
+  - thrift-gen/jaeger
+  - thrift-gen/sampling
+  - thrift-gen/zipkincore
+  - transport
+  - utils
+- name: github.com/uber/jaeger-lib
+  version: ed3a127ec5fef7ae9ea95b01b542c47fbd999ce5
+  subpackages:
+  - metrics
 - name: github.com/ugorji/go
   version: 5efa3251c7f7d05e5d9704a69a984ec9f1386a40
   subpackages:
@@ -116,6 +144,7 @@ imports:
 - name: golang.org/x/net
   version: f315505cf3349909cdf013ea56690da34e96a451
   subpackages:
+  - context
   - publicsuffix
 - name: golang.org/x/sys
   version: a646d33e2ee3172a661fc09bca23bb4889a41bc8
