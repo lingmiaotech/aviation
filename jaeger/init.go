@@ -14,22 +14,42 @@ import (
 	"github.com/uber/jaeger-client-go/transport"
 )
 
-func InitJaeger() {
+func Initialize() {
 
-	agentURI := os.Getenv("JAEGER_AGENT")
-	if agentURI == "" {
+	var sampleStrategy string
+	if sampleStrategy = os.Getenv("SAMPLE_STRATEGY"); sampleStrategy == ""{
+		sampleStrategy = "probabilistic,0.2"
+	}
+	args := strings.Split(sampleStrategy, ",")
+	if len(args) != 2 {
+		panic(fmt.Sprintf("ERROR: invalid SAMPLE_STRATEGY format %s", sampleStrategy))
+	}
+	samplerType := args[0]
+	param, err := strconv.ParseFloat(args[1], 64)
+	if err != nil {
+		panic(fmt.Sprintf("ERROR: invalid SAMPLE_STRATEGY param %s, param must be string of float64", sampleStrategy))
+	}
+
+	cfg := &config.Configuration{
+		ServiceName: configs.GetString("app_name"),
+		Sampler: &config.SamplerConfig{
+			Type:  samplerType,
+			Param: param,
+		},
+	}
+
+	var agentURI string
+	if agentURI = os.Getenv("JAEGER_AGENT"); agentURI == "" {
 		agentURI = fmt.Sprintf("http://jaeger-agent.%s:6831", configs.GetString("app_name"))
 	}
 
 	var backendHostPort string
-	env, _ := configs.Get("env").(string)
-	if env == "development" {
-		backendHostPort = "127.0.0.1:6831"
-	} else {
+	if env, _ := configs.Get("env").(string); env == "production" {
 		backendHostPort = agentURI
+	}else {
+		backendHostPort = "127.0.0.1:6831"
 	}
 
-	var err error
 	var sender jaeger.Transport
 	if strings.HasPrefix(backendHostPort, "http://") {
 		sender = transport.NewHTTPTransport(
@@ -43,23 +63,6 @@ func InitJaeger() {
 		}
 	}
 
-	sampleType := os.Getenv("JAEGER_SAMPLE_TYPE")
-	if sampleType == "" {
-		sampleType = "probabilistic"
-	}
-	sampleParamString := os.Getenv("JAEGER_SAMPLE_PARAM")
-	if sampleParamString == "" {
-		sampleParamString = "0.5"
-	}
-	sampleParam, _ := strconv.ParseFloat(sampleParamString, 64)
-
-	cfg := &config.Configuration{
-		ServiceName: configs.GetString("app_name"),
-		Sampler: &config.SamplerConfig{
-			Type:  sampleType,
-			Param: sampleParam,
-		},
-	}
 	tracer, _, err := cfg.NewTracer(
 		config.Reporter(jaeger.NewRemoteReporter(
 			sender,
