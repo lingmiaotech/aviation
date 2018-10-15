@@ -115,14 +115,14 @@ func GetServerMode() string {
 	return gin.DebugMode
 }
 
-func JaegerInit() gin.HandlerFunc {
+func InitJaeger() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		jaeger.Initialize()
 		c.Next()
 	}
 }
 
-func InitRootSpan() gin.HandlerFunc {
+func InitJaegerSpan() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		tracer := opentracing.GlobalTracer()
 		var span opentracing.Span
@@ -148,6 +148,6 @@ func InitMiddlewares(app *gin.Engine) {
 	case "test":
 		app.Use(gin.LoggerWithWriter(ioutil.Discard), gin.Recovery())
 	default:
-		app.Use(gin.Logger(), gin.Recovery(), JaegerInit(), InitRootSpan())
+		app.Use(gin.Logger(), gin.Recovery(), InitJaeger(), InitJaegerSpan())
 	}
 }
