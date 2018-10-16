@@ -7,9 +7,12 @@ import (
 
 	"github.com/CrowdSurge/banner"
 	"github.com/gin-gonic/gin"
+	"github.com/opentracing/opentracing-go"
+	"github.com/opentracing/opentracing-go/ext"
 
 	"github.com/lingmiaotech/tonic/configs"
 	"github.com/lingmiaotech/tonic/database"
+	"github.com/lingmiaotech/tonic/jaeger"
 	"github.com/lingmiaotech/tonic/kafka"
 	"github.com/lingmiaotech/tonic/logging"
 	"github.com/lingmiaotech/tonic/redis"
@@ -112,6 +115,32 @@ func GetServerMode() string {
 	return gin.DebugMode
 }
 
+func InitJaeger() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		jaeger.Initialize()
+		c.Next()
+	}
+}
+
+func InitJaegerSpan() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		tracer := opentracing.GlobalTracer()
+		var span opentracing.Span
+		spanContext, err := tracer.Extract(opentracing.HTTPHeaders, opentracing.HTTPHeadersCarrier(c.Request.Header))
+		if err != nil {
+			span = tracer.StartSpan("HTTP " + c.Request.Method)
+		} else {
+			span = tracer.StartSpan("HTTP "+c.Request.Method, ext.RPCServerOption(spanContext))
+		}
+		defer span.Finish()
+		ext.HTTPMethod.Set(span, c.Request.Method)
+		ext.HTTPUrl.Set(span, c.Request.URL.String())
+		ext.Component.Set(span, "net/http")
+		c.Request = c.Request.WithContext(opentracing.ContextWithSpan(c.Request.Context(), span))
+		c.Next()
+	}
+}
+
 func InitMiddlewares(app *gin.Engine) {
 	env, _ := configs.Get("env").(string)
 
@@ -119,6 +148,6 @@ func InitMiddlewares(app *gin.Engine) {
 	case "test":
 		app.Use(gin.LoggerWithWriter(ioutil.Discard), gin.Recovery())
 	default:
-		app.Use(gin.Logger(), gin.Recovery())
+		app.Use(gin.Logger(), gin.Recovery(), InitJaeger(), InitJaegerSpan())
 	}
 }
