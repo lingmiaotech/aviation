@@ -73,7 +73,7 @@ func New() (*Server, error) {
 	}
 
 	server = &Server{
-		App:  gin.Default(),
+		App:  gin.New(),
 		Port: 8080,
 	}
 	//InitMiddlewares(server.App.(*gin.Engine))
