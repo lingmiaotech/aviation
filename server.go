@@ -76,12 +76,12 @@ func New() (*Server, error) {
 		App:  gin.New(),
 		Port: 8080,
 	}
-	InitMiddlewares(server.App.(*gin.Engine))
+	//InitMiddlewares(server.App.(*gin.Engine))
 
-	//err = server.InitRoutes()
-	//if err != nil {
-	//	return nil, err
-	//}
+	err = server.InitRoutes()
+	if err != nil {
+		return nil, err
+	}
 
 	return server, nil
 }
