@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"syscall"
 	"time"
 	"context"
 
@@ -116,7 +117,7 @@ func (s *Server) Start() error {
 	// Wait for interrupt signal to gracefully shutdown the server with
 	// a timeout of 5 seconds.
 	quit := make(chan os.Signal)
-	signal.Notify(quit, os.Interrupt)
+	signal.Notify(quit, syscall.SIGTERM,syscall.SIGINT)
 	<-quit
 	fmt.Println("Shutdown Server ...")
 
