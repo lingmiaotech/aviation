@@ -5,8 +5,8 @@ import (
 	"strings"
 
 	"github.com/getsentry/raven-go"
-	"github.com/lingmiaotech/tonic/configs"
-	"github.com/lingmiaotech/tonic/logging"
+	"github.com/dyliu/tonic/configs"
+	"github.com/dyliu/tonic/logging"
 )
 
 type Sender interface {

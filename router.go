@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/lingmiaotech/tonic/statsd"
+	"github.com/dyliu/tonic/statsd"
 )
 
 func (s *Server) InitRoutes() error {

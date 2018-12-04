@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/lingmiaotech/tonic/configs"
-	"github.com/lingmiaotech/tonic/logging"
+	"github.com/dyliu/tonic/configs"
+	"github.com/dyliu/tonic/logging"
 	"gopkg.in/alexcesaro/statsd.v2"
 )
 

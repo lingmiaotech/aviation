@@ -1,4 +1,4 @@
-package: github.com/lingmiaotech/tonic
+package: github.com/dyliu/tonic
 import:
 - package: github.com/gin-gonic/gin
   version: ~1.2.0

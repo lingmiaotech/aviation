@@ -7,7 +7,7 @@ import (
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
-	"github.com/lingmiaotech/tonic/configs"
+	"github.com/dyliu/tonic/configs"
 )
 
 var Engine *gorm.DB
