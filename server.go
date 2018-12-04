@@ -4,6 +4,11 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"net/http"
+	"os"
+	"os/signal"
+	"time"
+	"context"
 
 	"github.com/CrowdSurge/banner"
 	"github.com/gin-gonic/gin"
@@ -93,10 +98,34 @@ func (s *Server) Start() error {
 		return errors.New("invalid_app_engine")
 	}
 
-	err := app.Run(fmt.Sprintf(":%d", s.Port))
-	if err != nil {
-		return err
+	//err := app.Run(fmt.Sprintf(":%d", s.Port))
+	//if err != nil {
+	//	return err
+	//}
+	srv := &http.Server{
+		Addr:    fmt.Sprintf(":%d", s.Port),
+		Handler: app,
 	}
+
+	go func() {
+		// service connections
+		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+		}
+	}()
+
+	// Wait for interrupt signal to gracefully shutdown the server with
+	// a timeout of 5 seconds.
+	quit := make(chan os.Signal)
+	signal.Notify(quit, os.Interrupt)
+	<-quit
+	fmt.Println("Shutdown Server ...")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
+	defer cancel()
+	if err := srv.Shutdown(ctx); err != nil {
+		fmt.Println("Server Shutdown:", err)
+	}
+	fmt.Println("Server exiting")
 
 	return nil
 }
