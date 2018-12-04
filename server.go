@@ -1,7 +1,7 @@
 package tonic
 
 import (
-	"errors"
+	"context"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -9,7 +9,6 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
-	"context"
 
 	"github.com/CrowdSurge/banner"
 	"github.com/gin-gonic/gin"
@@ -74,15 +73,15 @@ func New() (*Server, error) {
 	}
 
 	server = &Server{
-		App:  gin.New(),
+		App:  gin.Default(),
 		Port: 8080,
 	}
-	InitMiddlewares(server.App.(*gin.Engine))
+	//InitMiddlewares(server.App.(*gin.Engine))
 
-	err = server.InitRoutes()
-	if err != nil {
-		return nil, err
-	}
+	//err = server.InitRoutes()
+	//if err != nil {
+	//	return nil, err
+	//}
 
 	return server, nil
 }
@@ -94,10 +93,10 @@ func (s *Server) SetPort(p int) {
 func (s *Server) Start() error {
 	banner.Print("cheers")
 
-	app, ok := (s.App).(*gin.Engine)
-	if !ok {
-		return errors.New("invalid_app_engine")
-	}
+	//app, ok := (s.App).(*gin.Engine)
+	//if !ok {
+	//	return errors.New("invalid_app_engine")
+	//}
 
 	//err := app.Run(fmt.Sprintf(":%d", s.Port))
 	//if err != nil {
@@ -105,7 +104,7 @@ func (s *Server) Start() error {
 	//}
 	srv := &http.Server{
 		Addr:    fmt.Sprintf(":%d", s.Port),
-		Handler: app,
+		Handler: (s.App).(*gin.Engine),
 	}
 
 	go func() {
