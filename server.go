@@ -76,7 +76,7 @@ func New() (*Server, error) {
 		App:  gin.New(),
 		Port: 8080,
 	}
-	//InitMiddlewares(server.App.(*gin.Engine))
+	InitMiddlewares(server.App.(*gin.Engine))
 
 	//err = server.InitRoutes()
 	//if err != nil {
