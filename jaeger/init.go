@@ -15,7 +15,6 @@ import (
 )
 
 func Initialize() {
-
 	var sampleStrategy string
 	if sampleStrategy = os.Getenv("SAMPLE_STRATEGY"); sampleStrategy == ""{
 		sampleStrategy = "probabilistic,0.2"

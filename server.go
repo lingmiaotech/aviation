@@ -1,9 +1,14 @@
 package tonic
 
 import (
-	"errors"
+	"context"
 	"fmt"
 	"io/ioutil"
+	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"github.com/CrowdSurge/banner"
 	"github.com/gin-gonic/gin"
@@ -88,15 +93,30 @@ func (s *Server) SetPort(p int) {
 func (s *Server) Start() error {
 	banner.Print("cheers")
 
-	app, ok := (s.App).(*gin.Engine)
-	if !ok {
-		return errors.New("invalid_app_engine")
+	srv := &http.Server{
+		Addr:    fmt.Sprintf(":%d", s.Port),
+		Handler: (s.App).(*gin.Engine),
 	}
 
-	err := app.Run(fmt.Sprintf(":%d", s.Port))
-	if err != nil {
-		return err
+	go func() {
+		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			logging.GetDefaultLogger().Info("ListenAndServe err:",err)
+		}
+	}()
+
+	// Wait for interrupt signal to gracefully shutdown the server with
+	// a timeout of 60 seconds.
+	quit := make(chan os.Signal)
+	signal.Notify(quit, syscall.SIGTERM,syscall.SIGINT)
+	<-quit
+	logging.GetDefaultLogger().Info("Shutdown Server ...")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
+	defer cancel()
+	if err := srv.Shutdown(ctx); err != nil {
+		logging.GetDefaultLogger().Info("Server Shutdown:", err)
 	}
+	logging.GetDefaultLogger().Info("Server exiting")
 
 	return nil
 }
@@ -148,6 +168,6 @@ func InitMiddlewares(app *gin.Engine) {
 	case "test":
 		app.Use(gin.LoggerWithWriter(ioutil.Discard), gin.Recovery())
 	default:
-		app.Use(gin.Logger(), gin.Recovery(), InitJaeger(), InitJaegerSpan())
+		app.Use(gin.Logger(), gin.Recovery())
 	}
 }
