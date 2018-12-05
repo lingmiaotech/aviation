@@ -15,7 +15,7 @@ import (
 )
 
 func Initialize() {
-
+	fmt.Println("我是初始化Initialize jeager 方法")
 	var sampleStrategy string
 	if sampleStrategy = os.Getenv("SAMPLE_STRATEGY"); sampleStrategy == ""{
 		sampleStrategy = "probabilistic,0.2"
