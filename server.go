@@ -110,6 +110,7 @@ func (s *Server) Start() error {
 	go func() {
 		// service connections
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			fmt.Println("ListenAndServe err:",err)
 		}
 	}()
 
@@ -144,16 +145,15 @@ func GetServerMode() string {
 	return gin.DebugMode
 }
 
-//func InitJaeger() gin.HandlerFunc {
-//	return func(c *gin.Context) {
-//		jaeger.Initialize()
-//		c.Next()
-//	}
-//}
+func InitJaeger() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		jaeger.Initialize()
+		c.Next()
+	}
+}
 
 func InitJaegerSpan() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		jaeger.Initialize()
 		tracer := opentracing.GlobalTracer()
 		var span opentracing.Span
 		spanContext, err := tracer.Extract(opentracing.HTTPHeaders, opentracing.HTTPHeadersCarrier(c.Request.Header))
@@ -178,6 +178,6 @@ func InitMiddlewares(app *gin.Engine) {
 	case "test":
 		app.Use(gin.LoggerWithWriter(ioutil.Discard), gin.Recovery())
 	default:
-		app.Use(gin.Logger(), gin.Recovery(),InitJaegerSpan())
+		app.Use(gin.Logger(), gin.Recovery())
 	}
 }
