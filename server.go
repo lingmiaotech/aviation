@@ -93,24 +93,14 @@ func (s *Server) SetPort(p int) {
 func (s *Server) Start() error {
 	banner.Print("cheers")
 
-	//app, ok := (s.App).(*gin.Engine)
-	//if !ok {
-	//	return errors.New("invalid_app_engine")
-	//}
-
-	//err := app.Run(fmt.Sprintf(":%d", s.Port))
-	//if err != nil {
-	//	return err
-	//}
 	srv := &http.Server{
 		Addr:    fmt.Sprintf(":%d", s.Port),
 		Handler: (s.App).(*gin.Engine),
 	}
 
 	go func() {
-		// service connections
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			fmt.Println("ListenAndServe err:",err)
+			logging.GetDefaultLogger().Info("ListenAndServe err:",err)
 		}
 	}()
 
@@ -119,14 +109,14 @@ func (s *Server) Start() error {
 	quit := make(chan os.Signal)
 	signal.Notify(quit, syscall.SIGTERM,syscall.SIGINT)
 	<-quit
-	fmt.Println("Shutdown Server ...")
+	logging.GetDefaultLogger().Info("Shutdown Server ...")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
 	defer cancel()
 	if err := srv.Shutdown(ctx); err != nil {
-		fmt.Println("Server Shutdown:", err)
+		logging.GetDefaultLogger().Info("Server Shutdown:", err)
 	}
-	fmt.Println("Server exiting")
+	logging.GetDefaultLogger().Info("Server exiting")
 
 	return nil
 }
