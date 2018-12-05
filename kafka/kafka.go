@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/Shopify/sarama"
-	"github.com/dyliu/tonic/configs"
+	"github.com/lingmiaotech/tonic/configs"
 )
 
 type Class struct {

@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/Shopify/sarama"
-	"github.com/dyliu/tonic/kafka"
+	"github.com/lingmiaotech/tonic/kafka"
 	"github.com/sirupsen/logrus"
 )
 

@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/go-redis/redis"
-	"github.com/dyliu/tonic/configs"
+	"github.com/lingmiaotech/tonic/configs"
 )
 
 var Client *redis.Client

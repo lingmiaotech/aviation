@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/dyliu/tonic/configs"
+	"github.com/lingmiaotech/tonic/configs"
 	"github.com/opentracing/opentracing-go"
 	"github.com/uber/jaeger-client-go"
 	"github.com/uber/jaeger-client-go/config"

@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/dyliu/tonic/configs"
+	"github.com/lingmiaotech/tonic/configs"
 	"github.com/sirupsen/logrus"
 )
 

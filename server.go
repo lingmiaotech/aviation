@@ -15,14 +15,14 @@ import (
 	"github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/ext"
 
-	"github.com/dyliu/tonic/configs"
-	"github.com/dyliu/tonic/database"
-	"github.com/dyliu/tonic/jaeger"
-	"github.com/dyliu/tonic/kafka"
-	"github.com/dyliu/tonic/logging"
-	"github.com/dyliu/tonic/redis"
-	"github.com/dyliu/tonic/sentry"
-	"github.com/dyliu/tonic/statsd"
+	"github.com/lingmiaotech/tonic/configs"
+	"github.com/lingmiaotech/tonic/database"
+	"github.com/lingmiaotech/tonic/jaeger"
+	"github.com/lingmiaotech/tonic/kafka"
+	"github.com/lingmiaotech/tonic/logging"
+	"github.com/lingmiaotech/tonic/redis"
+	"github.com/lingmiaotech/tonic/sentry"
+	"github.com/lingmiaotech/tonic/statsd"
 )
 
 type Server struct {
