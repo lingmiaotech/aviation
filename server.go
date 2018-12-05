@@ -11,15 +11,17 @@ import (
 	"time"
 
 	"github.com/CrowdSurge/banner"
+	"github.com/gin-gonic/gin"
+	"github.com/opentracing/opentracing-go"
+	"github.com/opentracing/opentracing-go/ext"
+
 	"github.com/dyliu/tonic/configs"
 	"github.com/dyliu/tonic/database"
-	"github.com/dyliu/tonic/jaeger"
 	"github.com/dyliu/tonic/kafka"
 	"github.com/dyliu/tonic/logging"
 	"github.com/dyliu/tonic/redis"
 	"github.com/dyliu/tonic/sentry"
 	"github.com/dyliu/tonic/statsd"
-	"github.com/gin-gonic/gin"
 )
 
 type Server struct {
@@ -143,27 +145,27 @@ func GetServerMode() string {
 
 func InitJaeger() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		jaeger.Initialize()
-		c.Next()
+		//jaeger.Initialize()
+		//c.Next()
 	}
 }
 
 func InitJaegerSpan() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		//tracer := opentracing.GlobalTracer()
-		//var span opentracing.Span
-		//spanContext, err := tracer.Extract(opentracing.HTTPHeaders, opentracing.HTTPHeadersCarrier(c.Request.Header))
-		//if err != nil {
-		//	span = tracer.StartSpan("HTTP " + c.Request.Method)
-		//} else {
-		//	span = tracer.StartSpan("HTTP "+c.Request.Method, ext.RPCServerOption(spanContext))
-		//}
-		//defer span.Finish()
-		//ext.HTTPMethod.Set(span, c.Request.Method)
-		//ext.HTTPUrl.Set(span, c.Request.URL.String())
-		//ext.Component.Set(span, "net/http")
-		//c.Request = c.Request.WithContext(opentracing.ContextWithSpan(c.Request.Context(), span))
-		//c.Next()
+		tracer := opentracing.GlobalTracer()
+		var span opentracing.Span
+		spanContext, err := tracer.Extract(opentracing.HTTPHeaders, opentracing.HTTPHeadersCarrier(c.Request.Header))
+		if err != nil {
+			span = tracer.StartSpan("HTTP " + c.Request.Method)
+		} else {
+			span = tracer.StartSpan("HTTP "+c.Request.Method, ext.RPCServerOption(spanContext))
+		}
+		defer span.Finish()
+		ext.HTTPMethod.Set(span, c.Request.Method)
+		ext.HTTPUrl.Set(span, c.Request.URL.String())
+		ext.Component.Set(span, "net/http")
+		c.Request = c.Request.WithContext(opentracing.ContextWithSpan(c.Request.Context(), span))
+		c.Next()
 	}
 }
 
