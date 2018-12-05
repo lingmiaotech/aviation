@@ -11,10 +11,6 @@ import (
 	"time"
 
 	"github.com/CrowdSurge/banner"
-	"github.com/gin-gonic/gin"
-	"github.com/opentracing/opentracing-go"
-	"github.com/opentracing/opentracing-go/ext"
-
 	"github.com/dyliu/tonic/configs"
 	"github.com/dyliu/tonic/database"
 	"github.com/dyliu/tonic/jaeger"
@@ -23,6 +19,7 @@ import (
 	"github.com/dyliu/tonic/redis"
 	"github.com/dyliu/tonic/sentry"
 	"github.com/dyliu/tonic/statsd"
+	"github.com/gin-gonic/gin"
 )
 
 type Server struct {
@@ -76,7 +73,7 @@ func New() (*Server, error) {
 		App:  gin.New(),
 		Port: 8080,
 	}
-	//InitMiddlewares(server.App.(*gin.Engine))
+	InitMiddlewares(server.App.(*gin.Engine))
 
 	err = server.InitRoutes()
 	if err != nil {
@@ -114,7 +111,7 @@ func (s *Server) Start() error {
 	}()
 
 	// Wait for interrupt signal to gracefully shutdown the server with
-	// a timeout of 5 seconds.
+	// a timeout of 60 seconds.
 	quit := make(chan os.Signal)
 	signal.Notify(quit, syscall.SIGTERM,syscall.SIGINT)
 	<-quit
@@ -153,20 +150,20 @@ func InitJaeger() gin.HandlerFunc {
 
 func InitJaegerSpan() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		tracer := opentracing.GlobalTracer()
-		var span opentracing.Span
-		spanContext, err := tracer.Extract(opentracing.HTTPHeaders, opentracing.HTTPHeadersCarrier(c.Request.Header))
-		if err != nil {
-			span = tracer.StartSpan("HTTP " + c.Request.Method)
-		} else {
-			span = tracer.StartSpan("HTTP "+c.Request.Method, ext.RPCServerOption(spanContext))
-		}
-		defer span.Finish()
-		ext.HTTPMethod.Set(span, c.Request.Method)
-		ext.HTTPUrl.Set(span, c.Request.URL.String())
-		ext.Component.Set(span, "net/http")
-		c.Request = c.Request.WithContext(opentracing.ContextWithSpan(c.Request.Context(), span))
-		c.Next()
+		//tracer := opentracing.GlobalTracer()
+		//var span opentracing.Span
+		//spanContext, err := tracer.Extract(opentracing.HTTPHeaders, opentracing.HTTPHeadersCarrier(c.Request.Header))
+		//if err != nil {
+		//	span = tracer.StartSpan("HTTP " + c.Request.Method)
+		//} else {
+		//	span = tracer.StartSpan("HTTP "+c.Request.Method, ext.RPCServerOption(spanContext))
+		//}
+		//defer span.Finish()
+		//ext.HTTPMethod.Set(span, c.Request.Method)
+		//ext.HTTPUrl.Set(span, c.Request.URL.String())
+		//ext.Component.Set(span, "net/http")
+		//c.Request = c.Request.WithContext(opentracing.ContextWithSpan(c.Request.Context(), span))
+		//c.Next()
 	}
 }
 
