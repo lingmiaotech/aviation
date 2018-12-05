@@ -144,15 +144,16 @@ func GetServerMode() string {
 	return gin.DebugMode
 }
 
-func InitJaeger() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		jaeger.Initialize()
-		c.Next()
-	}
-}
+//func InitJaeger() gin.HandlerFunc {
+//	return func(c *gin.Context) {
+//		jaeger.Initialize()
+//		c.Next()
+//	}
+//}
 
 func InitJaegerSpan() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		jaeger.Initialize()
 		tracer := opentracing.GlobalTracer()
 		var span opentracing.Span
 		spanContext, err := tracer.Extract(opentracing.HTTPHeaders, opentracing.HTTPHeadersCarrier(c.Request.Header))
