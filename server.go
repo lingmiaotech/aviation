@@ -17,6 +17,7 @@ import (
 
 	"github.com/dyliu/tonic/configs"
 	"github.com/dyliu/tonic/database"
+	"github.com/dyliu/tonic/jaeger"
 	"github.com/dyliu/tonic/kafka"
 	"github.com/dyliu/tonic/logging"
 	"github.com/dyliu/tonic/redis"
@@ -145,8 +146,8 @@ func GetServerMode() string {
 
 func InitJaeger() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		//jaeger.Initialize()
-		//c.Next()
+		jaeger.Initialize()
+		c.Next()
 	}
 }
 
@@ -176,6 +177,6 @@ func InitMiddlewares(app *gin.Engine) {
 	case "test":
 		app.Use(gin.LoggerWithWriter(ioutil.Discard), gin.Recovery())
 	default:
-		app.Use(gin.Logger(), gin.Recovery(), InitJaeger(), InitJaegerSpan())
+		app.Use(gin.Logger(), gin.Recovery(),InitJaegerSpan())
 	}
 }
