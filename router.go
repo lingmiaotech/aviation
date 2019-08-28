@@ -6,7 +6,9 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/lingmiaotech/tonic/statsd"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+
+	"github.com/lingmiaotech/tonic/prom"
 )
 
 func (s *Server) InitRoutes() error {
@@ -15,18 +17,23 @@ func (s *Server) InitRoutes() error {
 	if !ok {
 		return errors.New("invalid_app_engine")
 	}
+	app.GET("/metrics", MetricsHandler)
 	app.Use(RequestHandler)
 	return nil
+}
+
+func MetricsHandler(c *gin.Context) {
+	promhttp.Handler().ServeHTTP(c.Writer, c.Request)
 }
 
 //RequestHandler handles each request and make some records
 func RequestHandler(c *gin.Context) {
 
-	timer := statsd.NewTimer()
+	timer := prom.NewTimer()
 
 	c.Next()
 
-	statsd.Increment(getCountBucket(c))
+	prom.Increment(getCountBucket(c))
 
 	timer.Send(getTimingBucket(c))
 
