@@ -64,7 +64,7 @@ func Gauge(bucket string, n int) {
 }
 
 func isLegit(bucket string) bool {
-	return model.LabelNameRE.MatchString(bucket)
+	return model.MetricNameRE.MatchString(bucket)
 }
 
 func getBucket(bucket string) (string, bool) {
