@@ -20,6 +20,7 @@ import (
 	"github.com/lingmiaotech/tonic/jaeger"
 	"github.com/lingmiaotech/tonic/kafka"
 	"github.com/lingmiaotech/tonic/logging"
+	"github.com/lingmiaotech/tonic/prom"
 	"github.com/lingmiaotech/tonic/redis"
 	"github.com/lingmiaotech/tonic/sentry"
 	"github.com/lingmiaotech/tonic/statsd"
@@ -48,6 +49,11 @@ func New() (*Server, error) {
 	}
 
 	err = logging.InitLogging()
+	if err != nil {
+		return nil, err
+	}
+
+	err = prom.InitProm()
 	if err != nil {
 		return nil, err
 	}
@@ -100,14 +106,14 @@ func (s *Server) Start() error {
 
 	go func() {
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			logging.GetDefaultLogger().Info("ListenAndServe err:",err)
+			logging.GetDefaultLogger().Info("ListenAndServe err:", err)
 		}
 	}()
 
 	// Wait for interrupt signal to gracefully shutdown the server with
 	// a timeout of 60 seconds.
 	quit := make(chan os.Signal)
-	signal.Notify(quit, syscall.SIGTERM,syscall.SIGINT)
+	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)
 	<-quit
 	logging.GetDefaultLogger().Info("Shutdown Server ...")
 
