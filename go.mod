@@ -2,6 +2,8 @@ module github.com/lingmiaotech/tonic
 
 go 1.13
 
+replace github.com/sirupsen/logrus v1.4.2 => github.com/sirupsen/logrus v0.11.5
+
 require (
 	github.com/CrowdSurge/banner v0.0.0-20140923200336-8c0e79dc5ff7
 	github.com/Shopify/sarama v1.23.1
